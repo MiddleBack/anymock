@@ -1,0 +1,34 @@
+{
+  "name": "any-mock",
+  "version": "1.0.0",
+  "description": "集成rap和anyproxy",
+  "main": "mock.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "rainice0@gmail.com",
+  "license": "ISC",
+  "devDependencies": {
+    "anyproxy": "^3.10.2",
+    "colorful": "^2.1.0",
+    "commander": "^2.9.0",
+    "npm": "^3.10.2"
+  },
+  "homepage": "https://github.com/MiddleBack/anymock",
+  "bin": {
+    "anymock": "bin.js"
+  },
+  "bugs": {
+    "url": "https://github.com/MiddleBack/anymock/issues"
+  },
+  "maintainers": [
+    {
+      "email": "rainice0@gmail.com",
+      "name": "谭湘元"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MiddleBack/anymock.git"
+  }
+}
