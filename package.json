@@ -8,7 +8,7 @@
   },
   "author": "rainice0@gmail.com",
   "license": "ISC",
-  "devDependencies": {
+  "dependencies": {
     "anyproxy": "^3.10.2",
     "colorful": "^2.1.0",
     "commander": "^2.9.0",
