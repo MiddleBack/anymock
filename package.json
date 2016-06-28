@@ -1,6 +1,6 @@
 {
   "name": "any-mock",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "集成rap和anyproxy",
   "main": "mock.js",
   "scripts": {
