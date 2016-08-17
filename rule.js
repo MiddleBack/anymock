@@ -42,6 +42,7 @@ function filterable(req) {
         }
     }
     return mock;
+    // return false;
 }
 
 module.exports = {
@@ -93,7 +94,8 @@ module.exports = {
     //replace the request protocol when sending to the real server
     //protocol : "http" or "https"
     replaceRequestProtocol: function (req, protocol) {
-        return filterable(req) ? 'http' : protocol;
+        // return filterable(req) ? 'http' : protocol;
+        return protocol;
     },
 
     //替换向服务器发出的请求参数（option)
@@ -102,11 +104,11 @@ module.exports = {
     //you should not overwrite content-length header in options, since anyproxy will handle it for you
     replaceRequestOption: function (req, option) {
         var newOption = option;
-        if (filterable(req)) {
-            newOption.hostname = 'rap.taobao.org';
-            newOption.path = '/mockjsdata/' + projectId + option.path;
-            newOption.port = '80';
-        }
+        // if (filterable(req)) {
+        //     newOption.hostname = 'rap.taobao.org';
+        //     newOption.path = '/mockjsdata/' + projectId + option.path;
+        //     newOption.port = '80';
+        // }
         return newOption;
     },
 
