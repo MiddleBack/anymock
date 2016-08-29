@@ -81,11 +81,16 @@ function getActiveDef(cb) {
     cb && getDefsList(function (defList, err) {
         let result = {};
         if (!err) {
-            defList.forEach(function (o) {
-                if (o && o.active === true) {
-                    result[o.prjId] = o;
-                }
-            });
+            try{
+                defList.forEach(function (o) {
+                    if (o && o.active === true) {
+                        result[o.prjId] = o;
+                    }
+                });
+            }catch (e){
+                err = e;
+            }
+
         }
         cb.call(null, result, err);
     });

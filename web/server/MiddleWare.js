@@ -24,12 +24,7 @@ function startProxy(cb) {
     async.parallel({
             //获取代理全局设置
             proxySetting: function (callback) {
-                try {
-                    callback(null, ProxyDef.getCurrentDef());
-                } catch (e) {
-                    callback(e, 'error occured!');
-                }
-
+                callback(null, ProxyDef.getCurrentDef());
             },
             //获取接口定义规则
             interfaceSetting: function (callback) {
@@ -40,9 +35,10 @@ function startProxy(cb) {
         },
         function (err, result) {
             if (err) {
-                throw err;
+                cb('启动代理服务器异常',err);
+            }else{
+                Anyproxy.start(result, cb);
             }
-            Anyproxy.start(result, cb);
         }
     );
 

@@ -39,31 +39,33 @@ function callApi({url, body = {}, options, loginVerify = true}) {
     }
 
 
-/*    const protocol = location.protocol;
-    let fullUrl;
-    if (url.indexOf('http') === 0) {
-        fullUrl = url;
-    } else {
-        fullUrl = (url.indexOf(URL_ROOT) === -1) ? protocol + URL_ROOT + url : protocol + url;
-    }*/
+    /*    const protocol = location.protocol;
+     let fullUrl;
+     if (url.indexOf('http') === 0) {
+     fullUrl = url;
+     } else {
+     fullUrl = (url.indexOf(URL_ROOT) === -1) ? protocol + URL_ROOT + url : protocol + url;
+     }*/
 
     let _options = assign({}, defaultOptions, options);
-    let _body = assign({}, body);
+    if(_options.method !== 'GET'){
+        let _body = assign({}, body);
 
-    Object.keys(_body).forEach((item) => {
-        if (_body[item] === null || _body[item] === undefined ||
-            _body[item] === 'null' || _body[item] === 'undefined') {
-            delete _body[item];
-        }
-    });
-    _options.body = JSON.stringify(_body);
+        Object.keys(_body).forEach((item) => {
+            if (_body[item] === null || _body[item] === undefined ||
+                _body[item] === 'null' || _body[item] === 'undefined') {
+                delete _body[item];
+            }
+        });
+        _options.body = JSON.stringify(_body);
+    }
 
     return fetch(url, _options)
         .then(checkStatus)
         .then(response =>
             response.json().then(json => ({json, response}))
         ).then(({json, response}) => {
-            if(json.code!=0){
+            if (json.code != 0) {
                 console.log(json.data);
                 return Promise.reject(new Error(json.msg));
             }

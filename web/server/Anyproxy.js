@@ -59,7 +59,7 @@ exports.start = function (settings, cb) {
 };
 exports.stop = function (cb) {
     if (!this.server) {
-        cb(null, null, new Error('proxy server is\'t running!'));
+        cb(null, 'proxy server is\'t running!', new Error('proxy server is\'t running!'));
         return;
     }
     this.server.close();

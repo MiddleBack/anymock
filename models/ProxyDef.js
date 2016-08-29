@@ -1,11 +1,11 @@
 'use strict';
 import _ from 'lodash';
-import util from '../lib/util';
+import utils from '../lib/util';
 import fs from 'fs';
 import path from 'path';
 import color from 'colorful';
 
-const anymockHome = util.getAnyMockHome(),
+const anymockHome = utils.getAnyMockHome(),
     filePath = path.join(anymockHome, 'proxy.json');
 
 function getCurrentDef() {
@@ -23,9 +23,9 @@ function getCurrentDef() {
             enableHttps: true,  //是否拦截https请求,anyproxy使用,anyproxy启用https参见https://github.com/alibaba/anyproxy/wiki/HTTPS%E7%9B%B8%E5%85%B3%E6%95%99%E7%A8%8B
             clearCache: true,  //是否清除http协议缓存
             crossDomain: true, //是否支持跨域
-            proxyPort: '8001',//anyproxy的代理端口
-            proxyConsolePort: '8002',//anyproxy的连接控制台端口
-            proxySocketPort: '8003' //anyproxy的websocket端口
+            proxyPort: 8001,//anyproxy的代理端口
+            proxyConsolePort: 8002,//anyproxy的连接控制台端口
+            proxySocketPort: 8003 //anyproxy的websocket端口
         };
 }
 function saveDef(def) {
@@ -37,13 +37,11 @@ function saveDef(def) {
     if (fs.existsSync(filePath)) {
         fs.unlinkSync(filePath);
     }
-    fs.writeFile(filePath, utils.stringify(writeData), {
+    fs.writeFileSync(filePath, utils.stringify(writeData), {
         encoding: 'utf8',
         mode: 0o777
-    }, (err)=> {
-        if (err) throw err;
-        console.log(color.green(`save proxy def to ${filePath}.`));
     });
+    console.log(color.green(`save proxy def to ${filePath}.`));
     return writeData;
 }
 

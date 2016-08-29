@@ -72,14 +72,25 @@ export default class WebInterface extends events.EventEmitter {
         app.get('/api/proxy-def', function (req, res) {
             res.json(buildSuccessReponse(ProxyDef.getCurrentDef()));
         });
-
-        //启动anyproxy
+        //保存代理设置
+        app.post('/api/proxy-def', function (req,res,next) {
+            try{
+                console.info(req.body);
+                ProxyDef.saveDef(req.body);
+                res.json(buildSuccessReponse());
+            }catch (err){
+                console.error(err);
+                res.json(buildResponse(1,'','save proxy def error!'));
+            }
+        });
+        //启动、关闭anyproxy
         app.post('/api/proxy/service', function (req, res, next) {
             var queryKeys = Object.getOwnPropertyNames(req.query);
             if (queryKeys.indexOf('stop') != -1) {
                 MiddleWare.stopProxy(function (msg, err) {
                     if (err) {
-                        res.status(500).json(buildResponse(1,'start proxy error!',err));
+                        console.error(err);
+                        res.json(buildResponse(1,'',msg||'start proxy error!'));
                     }else{
                         res.json(buildSuccessReponse());
                     }
@@ -88,7 +99,8 @@ export default class WebInterface extends events.EventEmitter {
 
                 MiddleWare.startProxy(function (msg, err) {
                     if (err) {
-                        res.status(500).json(err.message);
+                        console.error(err);
+                        res.json(buildResponse(1,'',msg||'start proxy error!'));
                     }else{
                         res.json(buildSuccessReponse(msg));
                     }
