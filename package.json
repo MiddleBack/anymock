@@ -4,15 +4,30 @@
   "description": "集成rap和anyproxy",
   "main": "mock.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon test/WebInterfaceTest.js"
   },
   "author": "rainice0@gmail.com",
   "license": "ISC",
   "dependencies": {
+    "antd": "^1.10.0",
     "anyproxy": "^3.10.2",
+    "async": "^2.0.1",
+    "body-parser": "^1.15.2",
     "colorful": "^2.1.0",
     "commander": "^2.9.0",
-    "npm": "^3.10.2"
+    "express": "^4.14.0",
+    "hbs": "^4.0.0",
+    "lodash": "^4.15.0",
+    "open": "0.0.5",
+    "react": "^15.3.1",
+    "react-dom": "^15.3.1",
+    "react-logger": "^1.1.0",
+    "react-redux": "^4.4.5",
+    "react-router": "^2.7.0",
+    "react-router-redux": "^4.0.5",
+    "redux": "^3.5.2",
+    "redux-logger": "^2.6.1",
+    "redux-thunk": "^2.1.0"
   },
   "homepage": "https://github.com/MiddleBack/anymock",
   "bin": {
@@ -30,5 +45,29 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/MiddleBack/anymock.git"
+  },
+  "devDependencies": {
+    "autoprefixer-loader": "^3.2.0",
+    "babel-core": "^6.13.2",
+    "babel-eslint": "^6.1.2",
+    "babel-loader": "^6.2.4",
+    "babel-plugin-transform-flow-comments": "^6.8.0",
+    "babel-plugin-transform-flow-strip-types": "^6.8.0",
+    "babel-plugin-transform-object-rest-spread": "^6.8.0",
+    "babel-preset-es2015": "^6.13.2",
+    "babel-preset-react": "^6.11.1",
+    "clean-webpack-plugin": "^0.1.10",
+    "css-loader": "^0.24.0",
+    "extract-text-webpack-plugin": "^1.0.1",
+    "html-webpack-plugin": "^2.22.0",
+    "less": "^2.7.1",
+    "less-loader": "^2.2.3",
+    "postcss-loader": "^0.10.1",
+    "react-hot-loader": "^1.3.0",
+    "style-loader": "^0.13.1",
+    "webpack": "^1.13.2",
+    "webpack-dev-server": "^1.15.0",
+    "webpack-hot-middleware": "^2.12.2",
+    "webpack-merge": "^0.14.1"
   }
 }
