@@ -37,15 +37,15 @@ function errorHandler(err, req, res, next) {
         error: err
     });
 }
-function buildResponse(code,data,msg) {
+function buildResponse(code, data, msg) {
     return {
-        code:code || 0,
-        msg:msg || 'success',
-        data : data || ''
+        code: code || 0,
+        msg: msg || 'success',
+        data: data || ''
     }
 }
 function buildSuccessReponse(data) {
-    return buildResponse(0,data)
+    return buildResponse(0, data)
 }
 export default class WebInterface extends events.EventEmitter {
     constructor(config) {
@@ -73,14 +73,14 @@ export default class WebInterface extends events.EventEmitter {
             res.json(buildSuccessReponse(ProxyDef.getCurrentDef()));
         });
         //保存代理设置
-        app.post('/api/proxy-def', function (req,res,next) {
-            try{
+        app.post('/api/proxy-def', function (req, res, next) {
+            try {
                 console.info(req.body);
                 ProxyDef.saveDef(req.body);
                 res.json(buildSuccessReponse());
-            }catch (err){
+            } catch (err) {
                 console.error(err);
-                res.json(buildResponse(1,'','save proxy def error!'));
+                res.json(buildResponse(1, '', 'save proxy def error!'));
             }
         });
         //启动、关闭anyproxy
@@ -90,8 +90,8 @@ export default class WebInterface extends events.EventEmitter {
                 MiddleWare.stopProxy(function (msg, err) {
                     if (err) {
                         console.error(err);
-                        res.json(buildResponse(1,'',msg||'start proxy error!'));
-                    }else{
+                        res.json(buildResponse(1, '', msg || 'start proxy error!'));
+                    } else {
                         res.json(buildSuccessReponse());
                     }
                 })
@@ -100,19 +100,56 @@ export default class WebInterface extends events.EventEmitter {
                 MiddleWare.startProxy(function (msg, err) {
                     if (err) {
                         console.error(err);
-                        res.json(buildResponse(1,'',msg||'start proxy error!'));
-                    }else{
+                        res.json(buildResponse(1, '', msg || 'start proxy error!'));
+                    } else {
                         res.json(buildSuccessReponse(msg));
                     }
                 });
-            }else{
+            } else {
                 next();
             }
         });
 
+        //获取项目列表
+        app.get('/api/project/list', function (req, res, next) {
+            ProjectDef.getDefs((result, err)=> {
+                if (err) {
+                    console.error(err);
+                    res.json(buildResponse(1, '', '获取项目列表异常!'));
+                } else {
+                    res.json(buildSuccessReponse(result));
+                }
+            });
+        });
+        //修改项目
+        app.post('/api/project', function (req, res, next) {
+            MiddleWare.saveProjects(req.body, (err)=> {
+                if (err) {
+                    res.json(buildResponse(1, '', '保存项目异常!'));
+                } else {
+                    res.json(buildSuccessReponse());
+                }
+            });
+        });
+        //删除项目
+        app.delete('/api/project/:id', function (req, res, next) {
+            ProjectDef.removeDef(req.params.id,(err)=>{
+                if (err) {
+                    res.json(buildResponse(1, '', '删除项目异常!'));
+                } else {
+                    res.json(buildSuccessReponse());
+                }
+            });
+        });
+        //从项目管理平台服务端获取项目定义
+        app.post('/api/project/remote/list',function (req,res,next) {
+            MiddleWare.fetchProjectDefFromRemote(req.body.url,(err,projects)=>{
+                //TODO:
+            });
+        });
+
         //静态资源绑定
         app.use(express.static(staticDir));
-
 
 
         //异常处理

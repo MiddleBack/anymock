@@ -7,7 +7,7 @@ import Col from 'antd/lib/col';
 import NavMenu from '../components/NavMenu';
 
 import 'antd/dist/antd.css';
-import './main.less';
+import './less/main.less';
 
 export default class Main extends React.Component {
     constructor(props) {
@@ -54,12 +54,12 @@ const menuData = [{
     children: [
         {
             key: 'm3',
-            path: '',
+            path: '/project/list',
             name: '项目列表'
         }, {
             key: 'm4',
-            path: '',
-            name: '项目列表'
+            path: '/interface/list',
+            name: '接口列表'
         }
     ]
 }];

@@ -16,6 +16,8 @@ import createBrowserHistory from 'history/lib/createBrowserHistory';
 import Main from './containers/Main';
 import ProxyStart from './containers/ProxyStart';
 import ProxySetting from './containers/ProxySetting';
+import ProjectList from './containers/ProjectList';
+import InterfaceList from './containers/InterfaceList';
 
 function configureStore(initialState) {
     const store = createStore(
@@ -49,6 +51,8 @@ render(<Router history={browserHistory}>
             <IndexRedirect to='/proxy/setting'/>
             <Route name="proxySetting" path='/proxy/setting' component={ProxySetting}/>
             <Route name="proxyStart" path='/proxy/start' component={ProxyStart}/>
+            <Route name="projectList" path='/project/list' component={ProjectList}/>
+            <Route name="interfaceList" path='/interface/list' component={InterfaceList}/>
         </Route>
     </Router>,
     document.getElementById('root'));

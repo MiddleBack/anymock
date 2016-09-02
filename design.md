@@ -23,8 +23,10 @@
     "defURL"       : "",
     "prjInterfaces": {  //默认为{}
         "/wc/products": {
+            "desc"     : "接口描述",
             "versions" : {
                 "1.0" : {
+                    "desc"    : "版本描述",
                     "inputs"  : "",
                     "outputs" : "",
                     "ative"   : false

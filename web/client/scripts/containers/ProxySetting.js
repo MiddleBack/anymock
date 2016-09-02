@@ -6,8 +6,9 @@ import Form from 'antd/lib/form';
 import Button from 'antd/lib/button';
 import Switch from 'antd/lib/switch';
 import InputNumber from 'antd/lib/input-number';
+import Input from 'antd/lib/input';
 import Message from 'antd/lib/message';
-import callApi from '../utils/fetch';
+import fetch from '../utils/fetch';
 
 class ProxySetting extends React.Component {
     constructor(props) {
@@ -26,8 +27,7 @@ class ProxySetting extends React.Component {
         e.preventDefault();
         console.log('收到表单值：', this.props.form.getFieldsValue());
         //设置页面默认值
-        callApi({
-            url: API_GET_PROXY_DEF_URL,
+        fetch.post(API_GET_PROXY_DEF_URL,{
             body: this.props.form.getFieldsValue()
         }).then((resp)=> {
             Message.success('代理设置保存成功!重启代理服务器可以应用当前设置。');
@@ -39,12 +39,7 @@ class ProxySetting extends React.Component {
 
     componentDidMount() {
         //设置页面默认值
-        callApi({
-            url: API_GET_PROXY_DEF_URL,
-            options: {
-                method: 'GET'
-            }
-        }).then((resp)=> {
+        fetch.get(API_GET_PROXY_DEF_URL).then((resp)=> {
             this.props.form.setFieldsValue(resp.json.data);
         }).catch((err)=> {
             console.error(err);
@@ -72,6 +67,13 @@ class ProxySetting extends React.Component {
                 <Form.Item {...formItemLayout} label="支持跨域">
                     <Switch checkedChildren="Y"
                             unCheckedChildren="N" {...getFieldProps('crossDomain', {valuePropName: 'checked'})}/>
+                </Form.Item>
+                <Form.Item {...formItemLayout} label="添加控制台">
+                    <Switch checkedChildren="Y"
+                            unCheckedChildren="N" {...getFieldProps('addConsole', {valuePropName: 'checked'})}/>
+                </Form.Item>
+                <Form.Item {...formItemLayout} label="追加自定义脚本">
+                    <Input type="textarea" rows={4} {...getFieldProps('appendHtml')}/>
                 </Form.Item>
                 <Form.Item {...formItemLayout} label="http代理端口">
                     <InputNumber min={1000} {...getFieldProps('proxyPort')}/>

@@ -4,9 +4,9 @@
 import React from 'react';
 import Button from 'antd/lib/button';
 import Message from 'antd/lib/message';
-import callApi from '../utils/fetch';
+import fetch from '../utils/fetch';
 import merge from 'lodash/merge';
-import './ProxyStart.less';
+import './less/ProxyStart.less';
 
 const PROXY_SERVER_STATE = {
     STOPED: 0, STARTING: 1, RUNNING: 2, STOPPING: 3
@@ -30,7 +30,7 @@ export default class ProxyStart extends React.Component {
         }));
 
 
-        callApi({url: START_SERVER_URL}).then((reps)=> {
+        fetch.post(START_SERVER_URL).then((reps)=> {
             this.setState(merge(this.state, {
                 proxyServerState: PROXY_SERVER_STATE.RUNNING,
                 consoleUrl : reps.json.data
@@ -48,7 +48,7 @@ export default class ProxyStart extends React.Component {
             proxyServerState: PROXY_SERVER_STATE.STOPPING
         }));
 
-        callApi({url: STOP_SERVER_URL}).then((json, response)=> {
+        fetch.post(STOP_SERVER_URL).then((json, response)=> {
             this.setState(merge(this.state, {
                 proxyServerState: PROXY_SERVER_STATE.STOPED
             }));

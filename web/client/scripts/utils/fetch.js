@@ -31,7 +31,7 @@ function checkStatus(response) {
  * @param loginVerify // 是否在该方法中校验登录
  * @returns {Promise.<TResult>}
  */
-function callApi({url, body = {}, options, loginVerify = true}) {
+function request({url, body = {}, options, loginVerify = true}) {
     if (!url) {
         let error = new Error('请传入 url');
         error.errorCode = 0;
@@ -75,4 +75,21 @@ function callApi({url, body = {}, options, loginVerify = true}) {
         });
 }
 
-export default callApi;
+function get(url,options={}) {
+    options.method='GET';
+    return request({url,options})
+}
+function post(url,params={}) {
+    return request({url,options:params.options,body:params.body})
+}
+function del(url,params={}) {
+    params.options = params.options || {};
+    params.options.method='DELETE';
+    return request({url,options:params.options,body:params.body})
+}
+
+export default {
+    get,
+    post,
+    del
+};

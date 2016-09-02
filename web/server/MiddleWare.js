@@ -1,21 +1,29 @@
 /**
  * Created by tanxiangyuan on 16/8/19.
  */
+"use strict";
 import async from 'async';
 import ProxyDef from '../../models/ProxyDef';
 import ProjectDef from '../../models/ProjectDef';
 import Anyproxy from './Anyproxy';
-
+import _ from 'lodash';
 
 /**
  * 从服务器获取项目下的接口定义信息
  * @param projectID
  * @param cb
  */
-function fetchInterfaceDef(projectID, cb) {
+function fetchInterfaceDefFromRemote(projectID, cb) {
 
 }
+/**
+ * 获取接口管理平台服务端获取项目定义信息
+ * @param url
+ * @param cb
+ */
+function fetchProjectDefFromRemote(url,cb) {
 
+}
 /**
  * 启动代理服务器
  * @param cb
@@ -50,6 +58,39 @@ function startProxy(cb) {
 function stopProxy(cb) {
     Anyproxy.stop(cb);
 }
-module.exports.fetchInterfaceDef = fetchInterfaceDef;
+/**
+ * 保存多个项目定义信息
+ * @param projects
+ * @param cb
+ */
+function saveProjects(projects,cb) {
+    if(!cb || typeof cb != 'function'){
+        throw new Error('callback is required and must be a function!');
+    }
+    if(!projects){
+        cb(new Error('project and callback is required!'));
+        return;
+    }
+    if(_.isPlainObject(projects)){
+        ProjectDef.saveDef(fixProjectId(projects));
+        cb();
+    }else if(_.isArray(projects)){
+        projects.forEach((o)=>{
+            ProjectDef.saveDef(fixProjectId(o));
+        });
+        cb();
+    }else{
+        cb(new Error('projects must be a plain object or a Array!'));
+    }
+}
+function fixProjectId(prj) {
+    if(!prj.prjId){
+        prj.prjId = ProjectDef.buildId();
+    }
+    return prj;
+}
+module.exports.fetchInterfaceDefFromRemote = fetchInterfaceDefFromRemote;
+module.exports.fetchProjectDefFromRemote = fetchProjectDefFromRemote;
 module.exports.startProxy = startProxy;
 module.exports.stopProxy = stopProxy;
+module.exports.saveProjects = saveProjects;

@@ -25,7 +25,7 @@ if (!fs.existsSync(defDir)) {
 }
 function getDefsList(cb) {
     if (!cb) return;
-    let fileNames = _.filter(fs.readdirSync(defDir),(fileName)=>{
+    let fileNames = _.filter(fs.readdirSync(defDir), (fileName)=> {
         return /\.json$/.test(fileName);
     });
     if (fileNames.length > 0) {
@@ -81,16 +81,11 @@ function getActiveDef(cb) {
     cb && getDefsList(function (defList, err) {
         let result = {};
         if (!err) {
-            try{
-                defList.forEach(function (o) {
-                    if (o && o.active === true) {
-                        result[o.prjId] = o;
-                    }
-                });
-            }catch (e){
-                err = e;
-            }
-
+            defList && defList.forEach(function (o) {
+                if (o && o.active === true) {
+                    result[o.prjId] = o;
+                }
+            });
         }
         cb.call(null, result, err);
     });
@@ -135,7 +130,7 @@ function saveDef(def) {
         def = _.merge(saved ? JSON.parse(saved) : {}, def);
         fs.unlinkSync(filePath);
     }
-    fs.writeFileSync(filePath, utils.stringify(def), {
+    fs.writeFileSync(filePath, util.stringify(def), {
         encoding: 'utf8',
         mode: 0o777
     });
@@ -156,6 +151,11 @@ function getActiveInterfaceDef(cb) {
             });
         }
         cb.call(null, result, err);
+    });
+}
+function removeDef(id,cb) {
+    fs.unlink(buildFilePathById(id),(err)=>{
+        cb(err);
     });
 }
 function interfaceDefFormate(def) {
@@ -183,8 +183,13 @@ function interfaceDefFormate(def) {
     }
     return {};
 }
-exports.saveDef               = saveDef;
-exports.getDef                = getDef;
-exports.getActiveDef          = getActiveDef;
-exports.getDefs               = getDefs;
+function buildId() {
+    return ('cus_'+ Date.now() + Math.random()).replace(/\./g,'');
+}
+exports.saveDef = saveDef;
+exports.getDef = getDef;
+exports.getActiveDef = getActiveDef;
+exports.getDefs = getDefs;
 exports.getActiveInterfaceDef = getActiveInterfaceDef;
+exports.removeDef = removeDef;
+exports.buildId = buildId;

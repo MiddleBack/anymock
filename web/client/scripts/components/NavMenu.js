@@ -39,7 +39,7 @@ export default class NavMenu extends React.Component {
         return <Menu mode="inline" defaultOpenKeys={menuKeys.openKeys}
                      defaultSelectedKeys={menuKeys.selectedKeys}
                      onSelect={this.menuSelected}
-                     style={{lineHeight: '64px'}}>
+                     style={{lineHeight: '64px',minHeight: '500px'}}>
             {
                 this.props.data && this.props.data.map((group)=> {
                     return (
