@@ -26,20 +26,24 @@ export default class NavMenu extends React.Component {
                 item.path && isActive(item.path) && (selectedKeys.push(item.key));
             });
         });
-        return {selectedKeys,openKeys};
+        return {selectedKeys, openKeys};
     }
 
     buildItem(item) {
         return (<Menu.Item key={item.key} path={item.path}>{item.name}</Menu.Item>)
     }
 
+    componentWillUpdate() {
+        //console.log('menu update : componentWillUpdate');
+    }
+
     render() {
         let menuKeys = this.findMenuKeys();
-
-        return <Menu mode="inline" defaultOpenKeys={menuKeys.openKeys}
-                     defaultSelectedKeys={menuKeys.selectedKeys}
+        return <Menu mode="inline"
+                     defaultOpenKeys={menuKeys.openKeys}
+                     selectedKeys={menuKeys.selectedKeys}
                      onSelect={this.menuSelected}
-                     style={{lineHeight: '64px',minHeight: '500px'}}>
+                     style={{lineHeight: '64px', minHeight: '500px'}}>
             {
                 this.props.data && this.props.data.map((group)=> {
                     return (

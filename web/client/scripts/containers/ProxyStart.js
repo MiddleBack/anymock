@@ -7,7 +7,6 @@ import Message from 'antd/lib/message';
 import fetch from '../utils/fetch';
 import merge from 'lodash/merge';
 import './less/ProxyStart.less';
-
 const PROXY_SERVER_STATE = {
     STOPED: 0, STARTING: 1, RUNNING: 2, STOPPING: 3
 };
@@ -119,3 +118,7 @@ export default class ProxyStart extends React.Component {
         );
     }
 }
+
+ProxyStart.contextTypes = {
+    router: React.PropTypes.object.isRequired
+};

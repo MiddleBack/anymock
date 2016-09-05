@@ -4,7 +4,7 @@
 'use strict';
 import React from 'react';
 import {render} from 'react-dom';
-import {useRouterHistory, Router, Route,IndexRedirect} from 'react-router';
+import {useRouterHistory, Router, Route, IndexRedirect,Link} from 'react-router';
 import {createStore, applyMiddleware} from 'redux';
 import {Provider} from 'react-redux';
 import thunk from 'redux-thunk';
@@ -18,6 +18,8 @@ import ProxyStart from './containers/ProxyStart';
 import ProxySetting from './containers/ProxySetting';
 import ProjectList from './containers/ProjectList';
 import InterfaceList from './containers/InterfaceList';
+
+import Button from 'antd/lib/button';
 
 function configureStore(initialState) {
     const store = createStore(
@@ -43,16 +45,17 @@ const browserHistory = useRouterHistory(createBrowserHistory)({
     basename: '/'
 });
 
+
 // const store = configureStore();
 // const history = syncHistoryWithStore(browserHistory, store);
 
 render(<Router history={browserHistory}>
         <Route path='/' component={Main}>
-            <IndexRedirect to='/proxy/setting'/>
-            <Route name="proxySetting" path='/proxy/setting' component={ProxySetting}/>
-            <Route name="proxyStart" path='/proxy/start' component={ProxyStart}/>
-            <Route name="projectList" path='/project/list' component={ProjectList}/>
-            <Route name="interfaceList" path='/interface/list' component={InterfaceList}/>
+            <IndexRedirect to='proxy/setting'/>
+            <Route name="proxySetting" path='proxy/setting' component={ProxySetting}/>
+            <Route name="proxyStart" path='proxy/start' component={ProxyStart}/>
+            <Route name="projectList" path='project/list' component={ProjectList}/>
+            <Route name="interfaceList" path='interface/list' component={InterfaceList}/>
         </Route>
     </Router>,
     document.getElementById('root'));

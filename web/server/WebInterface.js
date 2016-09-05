@@ -144,7 +144,40 @@ export default class WebInterface extends events.EventEmitter {
         //从项目管理平台服务端获取项目定义
         app.post('/api/project/remote/list',function (req,res,next) {
             MiddleWare.fetchProjectDefFromRemote(req.body.url,(err,projects)=>{
-                //TODO:
+                //TODO:从项目管理平台服务端获取项目定义列表
+            });
+        });
+
+        //获取接口列表
+        app.get('/api/project/interface/list',function (req,res,next) {
+            MiddleWare.getInterfaces((err,interfaces)=>{
+                if (err) {
+                    res.json(buildResponse(1, '', '获取接口列表异常!'));
+                } else {
+                    res.json(buildSuccessReponse(interfaces));
+                }
+            });
+        });
+
+        //保存接口定义
+        app.post('/api/project/:id/interface',function (req,res,next) {
+            MiddleWare.saveInterfaceDef(req.params.id,req.body,(err)=>{
+                if (err) {
+                    res.json(buildResponse(1, '', '应用接口设置异常!'));
+                } else {
+                    res.json(buildSuccessReponse());
+                }
+            });
+        });
+
+        //从服务端同步接口定义
+        app.post('/api/project/:id/interface/remote',function (req,res,next) {
+            MiddleWare.fetchInterfaceDefFromRemote(req.params.id,(err,data)=>{
+                if (err) {
+                    res.json(buildResponse(1, '', '应用接口设置异常!'));
+                } else {
+                    res.json(buildSuccessReponse(data));
+                }
             });
         });
 

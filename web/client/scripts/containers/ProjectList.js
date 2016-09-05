@@ -207,7 +207,9 @@ class ProjectList extends React.Component {
                                 </Col>
                                 <Col span="9">
                                     <Form.Item>
-                                        <Button type="primary" htmlType="submit" size="default"
+                                        <Button type="ghost"
+                                                htmlType="submit"
+                                                size="default"
                                                 icon="cloud-download-o">从服务器获取项目列表</Button>
                                     </Form.Item>
                                 </Col>
@@ -215,7 +217,11 @@ class ProjectList extends React.Component {
                         </Form.Item>
 
                     </Form>
-                    <Button type="primary" icon="plus" className="btn-add" size="default" onClick={this.toAddProject}>手动添加项目</Button>
+                    <Button type="primary"
+                            icon="plus"
+                            className="btn-add"
+                            size="default"
+                            onClick={this.toAddProject}>手动添加项目</Button>
                 </div>
                 <ProjectListTable dataSource={this.state.table.data}
                                   ref="projectListTable"

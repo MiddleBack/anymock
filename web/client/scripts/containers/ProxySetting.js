@@ -49,7 +49,6 @@ class ProxySetting extends React.Component {
 
     render() {
         const {getFieldProps} = this.props.form;
-
         return (
             <Form horizontal onSubmit={this.handleSubmit}>
                 <Form.Item {...formItemLayout} label="启动系统级代理">
