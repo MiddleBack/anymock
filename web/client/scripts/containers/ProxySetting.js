@@ -8,7 +8,7 @@ import Switch from 'antd/lib/switch';
 import InputNumber from 'antd/lib/input-number';
 import Input from 'antd/lib/input';
 import Message from 'antd/lib/message';
-import fetch from '../utils/fetch';
+import fetch from '../../../commons/fetch';
 
 class ProxySetting extends React.Component {
     constructor(props) {

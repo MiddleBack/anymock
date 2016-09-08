@@ -96,21 +96,20 @@ function getActiveDef(cb) {
  * @param cb
  */
 function getDef(prjId, cb) {
-    if (!prjId) {
-        throw new Error('invalid parameter, prjId is required!');
-    }
     if (!cb) {
         throw new Error('invalid parameter, callback is required!');
     }
+    if (!prjId) {
+        cb.call(null,new Error('invalid parameter, prjId is required!'));
+        return;
+    }
     let filePath = buildFilePathById(prjId);
     if (!fs.existsSync(filePath)) {
-        throw new Error(`invalid prjId:${prjId}`);
+        cb.call(null,new Error(`invalid prjId:${prjId}`));
+        return;
     }
     fs.readFile(filePath, fileReadOptions, function (err, data) {
-        if (err) {
-            throw err;
-        }
-        cb.call(null, data ? JSON.parse(data) : {})
+        cb.call(null,err,data ? JSON.parse(data) : {});
     })
 }
 /**

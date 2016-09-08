@@ -4,7 +4,7 @@
 import React from 'react';
 import Button from 'antd/lib/button';
 import Message from 'antd/lib/message';
-import fetch from '../utils/fetch';
+import fetch from '../../../commons/fetch';
 import merge from 'lodash/merge';
 import './less/ProxyStart.less';
 const PROXY_SERVER_STATE = {

@@ -9,7 +9,7 @@ import Select from 'antd/lib/select';
 import Form from 'antd/lib/form';
 import Col from 'antd/lib/col';
 import Message from 'antd/lib/message';
-import Fetch from '../utils/fetch';
+import Fetch from '../../../commons/fetch';
 import merge from 'lodash/merge';
 import ProjectListTable from '../components/ProjectListTable';
 
@@ -69,7 +69,6 @@ class ProjectList extends React.Component {
 
     _loadFromServer(e) {
         e.preventDefault();
-        console.log('收到表单值：', this.props.form.getFieldsValue());
         this.props.form.validateFields((errors, values) => {
             if (errors) {
                 console.log(errors);
@@ -83,8 +82,8 @@ class ProjectList extends React.Component {
                     url: values.projectsUrl_prefix + values.projectsUrl
                 }
             }).then((resp)=> {
-                //TODO:add data to table
-
+                this.state.table.data = dealProjectsMap(resp.json.data);
+                this.setState(this.state);
                 hide();
             }).catch((err)=> {
                 hide();
@@ -158,11 +157,10 @@ class ProjectList extends React.Component {
 
 
     _toggleProjectActiveState(text, record, index) {
-        console.log('current state is:', this.state);
         record.active = !record.active;
         Fetch.post('/api/project', {
             body: {
-                prjId: record.PrjId,
+                prjId: record.prjId,
                 active: record.active
             }
         }).then((resp)=> {
@@ -194,6 +192,7 @@ class ProjectList extends React.Component {
                                 <Col span="14">
                                     <Form.Item hasFeedback={false}>
                                         <Input placeholder="项目管理平台地址"
+                                               defaultValue="localhost:8011/data/projectList.json"
                                                style={{width: 200}}
                                                id="ipt_project_url"
                                                addonBefore={URL_SELECT_BEFORE}

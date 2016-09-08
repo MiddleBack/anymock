@@ -1,0 +1,297 @@
+{
+    "code": 0, 
+    "msg": "success", 
+    "data": {
+        "title": "接口列表", 
+        "interfaceList": [
+            {
+                "_id": "57c94ff32feefd30155ed518", 
+                "pId": "57c94c602feefd30155ed515", 
+                "uId": "00314554", 
+                "name": "接口二", 
+                "description": "222", 
+                "uri": "222", 
+                "type": "post", 
+                "__v": 0, 
+                "resParams": [ ], 
+                "reqParams": [ ], 
+                "updatetime": "2016-09-02T10:09:55.686Z", 
+                "createtime": "2016-09-02T10:09:55.686Z"
+            }, 
+            {
+                "_id": "57c971f05c18cc08201da11a", 
+                "pId": "57c94c602feefd30155ed515", 
+                "uId": "00314554", 
+                "name": "1", 
+                "description": "0", 
+                "uri": "0", 
+                "type": "post", 
+                "__v": 0, 
+                "resParams": [ ], 
+                "reqParams": [ ], 
+                "updatetime": "2016-09-02T12:34:56.690Z", 
+                "createtime": "2016-09-02T12:34:56.690Z"
+            }, 
+            {
+                "_id": "57c972695c18cc08201da11b", 
+                "pId": "57c94c602feefd30155ed515", 
+                "uId": "00314554", 
+                "name": "1", 
+                "description": "0", 
+                "uri": "0", 
+                "type": "post", 
+                "__v": 0, 
+                "resParams": [ ], 
+                "reqParams": [ ], 
+                "updatetime": "2016-09-02T12:36:57.539Z", 
+                "createtime": "2016-09-02T12:36:57.539Z"
+            }, 
+            {
+                "_id": "57c972795c18cc08201da11c", 
+                "pId": "57c94c602feefd30155ed515", 
+                "uId": "00314554", 
+                "name": "1", 
+                "description": "0", 
+                "uri": "0", 
+                "type": "post", 
+                "__v": 0, 
+                "resParams": [ ], 
+                "reqParams": [ ], 
+                "updatetime": "2016-09-02T12:37:13.497Z", 
+                "createtime": "2016-09-02T12:37:13.497Z"
+            }, 
+            {
+                "_id": "57c972a95c18cc08201da11d", 
+                "pId": "57c94c602feefd30155ed515", 
+                "uId": "00314554", 
+                "name": "00", 
+                "description": "0", 
+                "uri": "0", 
+                "type": "post", 
+                "__v": 0, 
+                "resParams": [ ], 
+                "reqParams": [ ], 
+                "updatetime": "2016-09-02T12:38:01.064Z", 
+                "createtime": "2016-09-02T12:38:01.064Z"
+            }, 
+            {
+                "_id": "57c972f15c18cc08201da11e", 
+                "pId": "57c94c602feefd30155ed515", 
+                "uId": "00314554", 
+                "name": "0", 
+                "description": "0", 
+                "uri": "0", 
+                "type": "post", 
+                "__v": 0, 
+                "resParams": [ ], 
+                "reqParams": [ ], 
+                "updatetime": "2016-09-02T12:39:13.185Z", 
+                "createtime": "2016-09-02T12:39:13.185Z"
+            }, 
+            {
+                "_id": "57c97338db5b627c2140ee6c", 
+                "pId": "57c94c602feefd30155ed515", 
+                "uId": "00314554", 
+                "name": "..", 
+                "description": ".", 
+                "uri": ".", 
+                "type": "post", 
+                "__v": 0, 
+                "resParams": [ ], 
+                "reqParams": [ ], 
+                "updatetime": "2016-09-02T12:40:24.810Z", 
+                "createtime": "2016-09-02T12:40:24.810Z"
+            }, 
+            {
+                "_id": "57c973bc9288448820095390", 
+                "pId": "57c94c602feefd30155ed515", 
+                "uId": "00314554", 
+                "name": "0", 
+                "description": "0", 
+                "uri": "0", 
+                "type": "get", 
+                "__v": 0, 
+                "resParams": [ ], 
+                "reqParams": [ ], 
+                "updatetime": "2016-09-02T12:42:36.778Z", 
+                "createtime": "2016-09-02T12:42:36.778Z"
+            }, 
+            {
+                "_id": "57c974309288448820095391", 
+                "pId": "57c94c602feefd30155ed515", 
+                "uId": "00314554", 
+                "name": "0", 
+                "description": "0", 
+                "uri": "0", 
+                "type": "get", 
+                "__v": 0, 
+                "resParams": [ ], 
+                "reqParams": [ ], 
+                "updatetime": "2016-09-02T12:44:32.735Z", 
+                "createtime": "2016-09-02T12:44:32.735Z"
+            }, 
+            {
+                "_id": "57c974549288448820095392", 
+                "pId": "57c94c602feefd30155ed515", 
+                "uId": "00314554", 
+                "name": "0", 
+                "description": "0", 
+                "uri": "0", 
+                "type": "get", 
+                "__v": 0, 
+                "resParams": [ ], 
+                "reqParams": [ ], 
+                "updatetime": "2016-09-02T12:45:08.409Z", 
+                "createtime": "2016-09-02T12:45:08.409Z"
+            }, 
+            {
+                "_id": "57c9757ee4e7dea41f855ddd", 
+                "pId": "57c94c602feefd30155ed515", 
+                "uId": "00314554", 
+                "name": "0", 
+                "description": "0", 
+                "uri": "0", 
+                "type": "post", 
+                "__v": 0, 
+                "resParams": [
+                    {
+                        "name": "0", 
+                        "description": "", 
+                        "type": "", 
+                        "rule": "", 
+                        "key": "0"
+                    }
+                ], 
+                "reqParams": [
+                    {
+                        "name": "0", 
+                        "description": "", 
+                        "type": "", 
+                        "rule": "", 
+                        "key": "0"
+                    }
+                ], 
+                "updatetime": "2016-09-02T12:50:06.194Z", 
+                "createtime": "2016-09-02T12:50:06.194Z"
+            }, 
+            {
+                "_id": "57c975dfeb83ac0c186fa1d8", 
+                "pId": "57c94c602feefd30155ed515", 
+                "uId": "00314554", 
+                "name": "00", 
+                "description": "0", 
+                "uri": "0", 
+                "type": "get", 
+                "__v": 0, 
+                "resParams": [
+                    {
+                        "name": "0", 
+                        "description": "", 
+                        "type": "", 
+                        "rule": "", 
+                        "key": "0"
+                    }
+                ], 
+                "reqParams": [
+                    {
+                        "name": "0", 
+                        "description": "", 
+                        "type": "", 
+                        "rule": "", 
+                        "key": "0"
+                    }
+                ], 
+                "updatetime": "2016-09-02T12:51:43.120Z", 
+                "createtime": "2016-09-02T12:51:43.120Z"
+            }, 
+            {
+                "_id": "57c97626eb83ac0c186fa1d9", 
+                "pId": "57c94c602feefd30155ed515", 
+                "uId": "00314554", 
+                "name": "wowowowo", 
+                "description": "ww", 
+                "uri": "ww", 
+                "type": "post", 
+                "__v": 0, 
+                "resParams": [
+                    {
+                        "name": "www", 
+                        "description": "", 
+                        "type": "", 
+                        "rule": "", 
+                        "key": "0"
+                    }
+                ], 
+                "reqParams": [
+                    {
+                        "name": "www", 
+                        "description": "", 
+                        "type": "", 
+                        "rule": "", 
+                        "key": "0"
+                    }
+                ], 
+                "updatetime": "2016-09-02T12:52:54.260Z", 
+                "createtime": "2016-09-02T12:52:54.260Z"
+            }, 
+            {
+                "_id": "57c97bcf125093d8219dec62", 
+                "pId": "57c94c602feefd30155ed515", 
+                "uId": "00314554", 
+                "name": "0", 
+                "description": "0", 
+                "uri": "0", 
+                "type": "get", 
+                "__v": 0, 
+                "resParams": [ ], 
+                "reqParams": [ ], 
+                "updatetime": "2016-09-02T13:17:03.383Z", 
+                "createtime": "2016-09-02T13:17:03.383Z"
+            }, 
+            {
+                "_id": "57c94e362feefd30155ed517", 
+                "pId": "57c94c602feefd30155ed515", 
+                "uId": "00314554", 
+                "name": "味儿", 
+                "description": "伟人", 
+                "uri": "是", 
+                "type": "post", 
+                "__v": 1, 
+                "resParams": [
+                    {
+                        "key": "0", 
+                        "rule": "", 
+                        "type": "", 
+                        "description": "", 
+                        "name": "11"
+                    }
+                ], 
+                "reqParams": [
+                    {
+                        "key": "0", 
+                        "rule": "", 
+                        "type": "", 
+                        "description": "", 
+                        "name": "11"
+                    }
+                ], 
+                "updatetime": "2016-09-02T10:02:30.430Z", 
+                "createtime": "2016-09-02T10:02:30.430Z"
+            }, 
+            {
+                "_id": "57c97be8e5c023080af55ced", 
+                "pId": "57c94c602feefd30155ed515", 
+                "uId": "00314554", 
+                "name": "1", 
+                "description": "2", 
+                "uri": "2", 
+                "type": "get", 
+                "__v": 0, 
+                "resParams": [ ], 
+                "reqParams": [ ], 
+                "updatetime": "2016-09-02T13:17:28.023Z", 
+                "createtime": "2016-09-02T13:17:28.023Z"
+            }
+        ]
+    }
+}

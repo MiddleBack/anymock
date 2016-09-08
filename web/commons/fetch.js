@@ -1,5 +1,5 @@
 import 'isomorphic-fetch';
-import assign from 'lodash/assign';
+import {assign} from 'lodash';
 // 定义 fetch 默认选项， 看 https://github.com/github/fetch
 const defaultOptions = {
     method: 'post',
@@ -67,7 +67,7 @@ function request({url, body = {}, options, loginVerify = true}) {
         ).then(({json, response}) => {
             if (json.code != 0) {
                 console.log(json.data);
-                return Promise.reject(new Error(json.msg));
+                return Promise.reject(new Error(json.code,json.msg));
             }
             return {json, response};
         }).catch((error) => {

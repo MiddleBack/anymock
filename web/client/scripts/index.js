@@ -10,35 +10,35 @@ import {Provider} from 'react-redux';
 import thunk from 'redux-thunk';
 import createLogger from 'redux-logger';
 
-import rootReducer from './reducers';
+// import rootReducer from './reducers';
 import createBrowserHistory from 'history/lib/createBrowserHistory';
 
 import Main from './containers/Main';
-import ProxyStart from './containers/ProxyStart';
 import ProxySetting from './containers/ProxySetting';
+import ProxyStart from './containers/ProxyStart';
 import ProjectList from './containers/ProjectList';
 import InterfaceList from './containers/InterfaceList';
 
-import Button from 'antd/lib/button';
 
-function configureStore(initialState) {
-    const store = createStore(
-        rootReducer,
-        initialState,
-        applyMiddleware(thunk, createLogger())
-    );
 
-    if (module.hot) {
-        // Enable Webpack hot module replacement for reducers
-        module.hot.accept('./reducers', () => {
-            /*eslint-disable global-require*/
-            const nextRootReducer = require('./reducers').default;
-            store.replaceReducer(nextRootReducer);
-        });
-    }
-
-    return store;
-}
+// function configureStore(initialState) {
+//     const store = createStore(
+//         rootReducer,
+//         initialState,
+//         applyMiddleware(thunk, createLogger())
+//     );
+//
+//     if (module.hot) {
+//         // Enable Webpack hot module replacement for reducers
+//         module.hot.accept('./reducers', () => {
+//             /*eslint-disable global-require*/
+//             const nextRootReducer = require('./reducers').default;
+//             store.replaceReducer(nextRootReducer);
+//         });
+//     }
+//
+//     return store;
+// }
 
 
 const browserHistory = useRouterHistory(createBrowserHistory)({

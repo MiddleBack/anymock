@@ -24,6 +24,7 @@
     "prjInterfaces": {  //默认为{}
         "/wc/products": {
             "id"       : "interface1",
+            "type"     : "GET",
             "desc"     : "接口描述",
             "versions" : {
                 "1.0" : {

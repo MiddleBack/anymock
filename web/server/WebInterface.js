@@ -144,7 +144,11 @@ export default class WebInterface extends events.EventEmitter {
         //从项目管理平台服务端获取项目定义
         app.post('/api/project/remote/list',function (req,res,next) {
             MiddleWare.fetchProjectDefFromRemote(req.body.url,(err,projects)=>{
-                //TODO:从项目管理平台服务端获取项目定义列表
+                if (err) {
+                    res.json(buildResponse(err.id||1, '', '从项目管理平台服务端获取项目定义异常!'));
+                } else {
+                    res.json(buildSuccessReponse(projects));
+                }
             });
         });
 
@@ -152,7 +156,7 @@ export default class WebInterface extends events.EventEmitter {
         app.get('/api/project/interface/list',function (req,res,next) {
             MiddleWare.getInterfaces((err,interfaces)=>{
                 if (err) {
-                    res.json(buildResponse(1, '', '获取接口列表异常!'));
+                    res.json(buildResponse(err.id || 1, '', '获取接口列表异常!'));
                 } else {
                     res.json(buildSuccessReponse(interfaces));
                 }
@@ -174,7 +178,7 @@ export default class WebInterface extends events.EventEmitter {
         app.post('/api/project/:id/interface/remote',function (req,res,next) {
             MiddleWare.fetchInterfaceDefFromRemote(req.params.id,(err,data)=>{
                 if (err) {
-                    res.json(buildResponse(1, '', '应用接口设置异常!'));
+                    res.json(buildResponse(err.id || 1, '', '从服务端同步接口定义异常!'));
                 } else {
                     res.json(buildSuccessReponse(data));
                 }

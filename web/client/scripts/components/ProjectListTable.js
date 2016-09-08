@@ -19,9 +19,11 @@ class ProjectListTable extends React.Component {
         if (checkState()) {
             isEdit = true;
             this.props.onEdit(index);
-            let preFixIndex = record.defURL.indexOf('://')+3;
-            record.defURL_preFix = record.defURL.substring(0,preFixIndex);
-            record.defURL_subFix = record.defURL.substring(preFixIndex);
+            if (record.defURL) {
+                let preFixIndex = record.defURL.indexOf('://') + 3;
+                record.defURL_preFix = record.defURL.substring(0, preFixIndex);
+                record.defURL_subFix = record.defURL.substring(preFixIndex);
+            }
             this.props.form.setFieldsValue(record);
         }
     }
@@ -38,6 +40,7 @@ class ProjectListTable extends React.Component {
             }
             values.defURL = values.defURL_preFix + values.defURL_subFix;
             delete values.defURL_subFix;
+
             delete values.defURL_preFix;
             this.props.onSave({index, record: values, cb: resetState});
 
@@ -52,23 +55,23 @@ class ProjectListTable extends React.Component {
     }
 
     componentWillMount() {
-        console.log('componentWillMount!');
+        // console.log('componentWillMount!');
     }
 
     componentDidMount() {
-        console.log('componentDidMount!');
+        // console.log('componentDidMount!');
     }
 
     componentWillUpdate(nextProps, nextState) {
-        console.log('componentWillUpdate!');
+        // console.log('componentWillUpdate!');
     }
 
     componentDidUpdate(prevProps, prevState) {
-        console.log('componentDidUpdate!');
+        // console.log('componentDidUpdate!');
     }
 
     componentWillUnMounting() {
-        console.log('componentWillUnMounting!');
+        // console.log('componentWillUnMounting!');
     }
 
     render() {
@@ -114,7 +117,7 @@ class ProjectListTable extends React.Component {
                                    }]
                                })}/>
                     </Form.Item>)
-                    : <span>{String(text)}</span>
+                    : <span>{text || ''}</span>
             }
         }, {
             title: '项目根路径',
@@ -124,9 +127,9 @@ class ProjectListTable extends React.Component {
             render: (text, record, index)=> {
                 return record.edit ?
                     (<Form.Item>
-                        <Input defaultValue={record.prjPath||''} {...getFieldProps('prjPath')}/>
+                        <Input defaultValue={record.prjPath || ''} {...getFieldProps('prjPath')}/>
                     </Form.Item>)
-                    : <span>{text||''}</span>
+                    : <span>{text || ''}</span>
             }
         }, {
             title: '已激活',

@@ -6,7 +6,7 @@ import Row from 'antd/lib/row';
 import Col from 'antd/lib/col';
 import NavMenu from '../components/NavMenu';
 
-import 'antd/dist/antd.css';
+// import 'antd/dist/antd.css';
 import './less/main.less';
 
 export default class Main extends React.Component {

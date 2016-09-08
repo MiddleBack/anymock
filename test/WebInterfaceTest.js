@@ -3,7 +3,7 @@
  */
 import WebInterface from '../web/server/WebInterface';
 import webpack from 'webpack';
-import webpackConfig from '../web/webpack.config.babel';
+import webpackConfig from '../webpack.config.babel';
 
 var wi = new WebInterface({port: 8011});
 var app = wi.app;

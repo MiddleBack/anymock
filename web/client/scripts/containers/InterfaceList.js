@@ -5,37 +5,37 @@
 import React from 'react';
 import Table from 'antd/lib/table';
 import Button from 'antd/lib/button';
-import Message from 'antd/lib/message';
 import Input from 'antd/lib/input';
 import Icon from 'antd/lib/icon';
 import Radio from 'antd/lib/radio';
+import Message from 'antd/lib/message';
 import Select from 'antd/lib/select';
-import Fetch from '../utils/fetch';
+import Tooltip from 'antd/lib/tooltip';
 import CloneDeep from 'lodash/cloneDeep';
+import Fetch from '../../../commons/fetch';
 import './less/IntrefaceList.less';
 
-import {INTERFACE_DEAL_TYPE} from '../../../../models/Constants';
+import {INTERFACE_DEAL_TYPE, BUSINESS_ERR} from '../../../commons/constants';
 
-let buildDataStore = (interfaces)=> {
+let buildDataStore = (reps)=> {
     let projects = {};
-    interfaces.forEach((_interface)=> {
-        //从接口定义中以项目ID维度筛选项目
-        projects[_interface.prjId] = _interface.prjName;
+    reps.interfaces.forEach((_interface)=> {
+
         //计算接口数据处理类型 优先级为:rewriteURL?rewriteData?version
         _interface.dealType = _interface.rewriteURL && _interface.rewriteURL.active ? INTERFACE_DEAL_TYPE.DEAL_TYPE_URL
             : _interface.rewriteData && _interface.rewriteData.active ? INTERFACE_DEAL_TYPE.DEAL_TYPE_DATE
             : INTERFACE_DEAL_TYPE.DEAL_TYPE_VERSION;
         //当处理类型为version时,设置当前默认版本
-        if(_interface.dealType === INTERFACE_DEAL_TYPE.DEAL_TYPE_VERSION){
-            Object.keys(_interface.versions).forEach((version)=>{
-                _interface.versions[version].active && (_interface.currentVersion=version);
+        if (_interface.dealType === INTERFACE_DEAL_TYPE.DEAL_TYPE_VERSION) {
+            Object.keys(_interface.versions).forEach((version)=> {
+                _interface.versions[version].active && (_interface.currentVersion = version);
             });
         }
         //id --> key
         _interface.key = _interface.id;
 
         //清理源数据
-        Object.keys(_interface.versions).forEach((version)=>{
+        Object.keys(_interface.versions).forEach((version)=> {
             delete  _interface.versions[version].active;
         });
 
@@ -46,16 +46,16 @@ let buildDataStore = (interfaces)=> {
     });
 
     return {
-        projects: Object.keys(projects).map((prjId)=> {
+        projects: reps.prjs.map((prj)=> {
             return {
-                id: prjId,
-                name: projects[prjId]
+                id: prj.prjId,
+                name: prj.prjName
             }
         }),
-        interfaces
+        interfaces: reps.interfaces
     };
 };
-let buildVersionInfo = (record)=>{
+let buildVersionInfo = (record)=> {
     let versions = record.versions && Object.keys(record.versions);
     let currentVersion = record.currentVersion || (versions.length > 0 && versions[0]);
     return {
@@ -63,15 +63,15 @@ let buildVersionInfo = (record)=>{
         currentVersion
     }
 };
-let dealRowForApply = (row)=>{
+let dealRowForApply = (row)=> {
     let newRow = CloneDeep(row);
-    if(newRow.dealType === INTERFACE_DEAL_TYPE.DEAL_TYPE_URL){
+    if (newRow.dealType === INTERFACE_DEAL_TYPE.DEAL_TYPE_URL) {
         newRow.rewriteURL.active = true;
-    }else if(newRow.dealType === INTERFACE_DEAL_TYPE.DEAL_TYPE_DATE){
+    } else if (newRow.dealType === INTERFACE_DEAL_TYPE.DEAL_TYPE_DATE) {
         newRow.rewriteData.active = true;
-    }else{
+    } else {
         let {currentVersion} = buildVersionInfo(newRow);
-        Object.keys(newRow.versions).forEach((versionCode)=>{
+        Object.keys(newRow.versions).forEach((versionCode)=> {
             newRow.versions[versionCode].active = versionCode === currentVersion;
         })
     }
@@ -94,9 +94,9 @@ export default class InterfaceList extends React.Component {
         };
         this.selectPrjId = null;
         this.pageInfo = {
-            selectPrjId : null,
-            syncLoading : false,
-            tableLoading : false
+            selectPrjId: null,
+            syncLoading: false,
+            tableLoading: false
         }
     }
 
@@ -105,7 +105,11 @@ export default class InterfaceList extends React.Component {
             this.dataStore = buildDataStore(resp.json.data);
             this.setState(this.filterInterface());
         }).catch((err)=> {
-            Message.error(err);
+            if (err.id == BUSINESS_ERR.INTERFACE_FETCH_EMPTY) {
+                Message.info('当前已经是最新最新的版本咯~');
+            } else {
+                Message.error(err.msg);
+            }
         });
     }
 
@@ -151,11 +155,11 @@ export default class InterfaceList extends React.Component {
         this.pageInfo.tableLoading = this.pageInfo.syncLoading = true;
         this.setState(this.state);
 
-        Fetch.post(`/api/project/${this.pageInfo.selectPrjId}/interface/remote`).then((resp)=>{
+        Fetch.post(`/api/project/${this.pageInfo.selectPrjId}/interface/remote`).then((resp)=> {
             this.pageInfo.tableLoading = this.pageInfo.syncLoading = false;
             this.dataStore = buildDataStore(resp.json.data);
             this.setState(this.filterInterface());
-        }).catch((err)=>{
+        }).catch((err)=> {
             Message.error(`同步接口设置信息失败!${err}`);
             this.pageInfo.tableLoading = this.pageInfo.syncLoading = false;
             this.setState(this.state);
@@ -182,7 +186,7 @@ export default class InterfaceList extends React.Component {
     }
 
     render() {
-        const TABLE_COLUMNS = [{
+        let TABLE_COLUMNS = [{
             title: '所属项目',
             dataIndex: 'prjName',
             key: 'prjName',
@@ -207,30 +211,31 @@ export default class InterfaceList extends React.Component {
             key: 'c0',
             width: '15%',
             render: (text, record, index)=> {
-                let {versions,currentVersion} = buildVersionInfo(record);
+                let {versions, currentVersion} = buildVersionInfo(record);
                 return (
                     <Radio.Group onChange={(e)=> this.dealTypeChanged(e.target.value, index, record)}
                                  value={record.dealType}>
                         {
                             versions.length > 0 && (
-                                <Radio className="radio-style" value={INTERFACE_DEAL_TYPE.DEAL_TYPE_VERSION}>服务端版本&nbsp;
+                                <Radio className="radio-style" value={INTERFACE_DEAL_TYPE.DEAL_TYPE_VERSION}>mock&nbsp;
+
                                     <Select defaultValue={currentVersion}
                                             onChange={(value)=>this.versionChanged(value, index)}
                                             disabled={record.dealType != INTERFACE_DEAL_TYPE.DEAL_TYPE_VERSION}>
                                         {versions.map((option, index1)=><Select.Option
                                             key={'option_' + index + '_' + index1}
                                             value={option}>{option}</Select.Option>)}
-                                    </Select>
-                                    <div className="version-desc">
-                                        <Icon type="question-circle-o"/>&nbsp;
-                                        {record.versions[currentVersion].desc}
-                                    </div>
+                                    </Select>&nbsp;&nbsp;
+                                    <Tooltip placement="bottom"
+                                             title={record.versions[currentVersion].desc}>
+                                        <Icon type="question-circle-o" style={{cursor:'pointer'}}/>
+                                    </Tooltip>
                                 </Radio>
                             )
                         }
 
-                        <Radio className="radio-style" value={INTERFACE_DEAL_TYPE.DEAL_TYPE_URL}>rewriteURL</Radio>
-                        <Radio className="radio-style" value={INTERFACE_DEAL_TYPE.DEAL_TYPE_DATE}>rewriteData</Radio>
+                        <Radio className="radio-style" value={INTERFACE_DEAL_TYPE.DEAL_TYPE_URL}>转发URL</Radio>
+                        <Radio className="radio-style" value={INTERFACE_DEAL_TYPE.DEAL_TYPE_DATE}>自定义数据</Radio>
                     </Radio.Group>
                 )
             }
@@ -241,7 +246,7 @@ export default class InterfaceList extends React.Component {
             render: (text, record, index)=> {
                 switch (record.dealType) {
                     case INTERFACE_DEAL_TYPE.DEAL_TYPE_VERSION :
-                        let {versions,currentVersion} = buildVersionInfo(record);
+                        let {versions, currentVersion} = buildVersionInfo(record);
                         let _version = record.versions[currentVersion];
                         return (
                             <div>
@@ -262,6 +267,7 @@ export default class InterfaceList extends React.Component {
                             </div>
                         );
                     case INTERFACE_DEAL_TYPE.DEAL_TYPE_URL :
+                        record.rewriteURL = record.rewriteURL || {};
                         return (
                             <div>
                                 转发地址:
@@ -272,6 +278,7 @@ export default class InterfaceList extends React.Component {
                             </div>
                         );
                     case INTERFACE_DEAL_TYPE.DEAL_TYPE_DATE :
+                        record.rewriteData = record.rewriteData || {};
                         return (
                             <div>
                                 响应数据:
@@ -303,10 +310,15 @@ export default class InterfaceList extends React.Component {
             }
         }];
 
+        if(this.pageInfo.selectPrjId){
+            TABLE_COLUMNS.splice(0,1);
+        }
+
+
         return <div>
             <div className="table-toolbar">
                 <label>项目: </label>
-                <Select defaultValue="" ref="projectSelect" style={{minWidth: 150}}
+                <Select defaultValue={this.pageInfo.selectPrjId||''} ref="projectSelect" style={{minWidth: 150}}
                         onChange={(val)=>this.projectChanged(val)}>
                     <Select.Option value="">全部</Select.Option>
                     {this.state.projects.map((p)=><Select.Option value={p.id}
@@ -314,8 +326,8 @@ export default class InterfaceList extends React.Component {
                 </Select>
                 {
                     !!this.pageInfo.selectPrjId && (<Button type="ghost"
-                                                   icon={this.pageInfo.syncLoading?'loading':'cloud-download-o'}
-                                                   onClick={(e)=> this.sync()}>{this.pageInfo.syncLoading?'正在同步':'从服务端同步当前项目的接口信息'}</Button>)
+                                                            icon={this.pageInfo.syncLoading ? 'loading' : 'cloud-download-o'}
+                                                            onClick={(e)=> this.sync()}>{this.pageInfo.syncLoading ? '正在同步' : '从服务端同步当前项目的接口信息'}</Button>)
                 }
             </div>
 

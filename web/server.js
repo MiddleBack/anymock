@@ -3,7 +3,7 @@
 require('core-js/fn/object/assign');
 const webpack = require('webpack');
 const WebpackDevServer = require('webpack-dev-server');
-const config = require('./webpack.config.babel');
+const config = require('./../webpack.config.babel.js');
 const open = require('open');
 
 console.log(`in server : ${__dirname}`);
