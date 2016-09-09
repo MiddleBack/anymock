@@ -11,15 +11,6 @@ import autoprefixer from 'autoprefixer';
 const appPath = path.resolve(__dirname, 'web/client');
 
 module.exports = {
-    cache: false, //开启缓存,增量编译
-    debug: false, //开启 debug 模式
-    watch: false,
-    devtool: 'source-map', //生成 source map文件
-    stats: {
-        colors: true, //打印日志显示颜色
-        reasons: false //打印相关模块被引入
-    },
-
     resolve: {
         root: [appPath], // 设置要加载模块根路径，该路径必须是绝对路径
         modulesDirectories: ['node_modules'],
@@ -64,18 +55,17 @@ module.exports = {
                     presets: ['react', 'es2015']
                 }
             },
-            // https://github.com/webpack/extract-text-webpack-plugin 单独引入css文件
-            {
-                test: /\.css$/,
-                // loader: 'style-loader!css-loader!autoprefixer-loader?{browsers:["IE >= 8"]}'
-                loader: ExtractTextPlugin.extract('style-loader', 'css-loader', 'postcss-loader?pack=cleaner')
-            },
             {
                 test: /\.less/,
                 exclude: /node_modules/,
-                loader: ExtractTextPlugin.extract('style-loader', 'css-loader', 'less-loader','postcss-loader?pack=cleaner')
-                // loader: 'style-loader!css-loader!less-loader!autoprefixer-loader?{browsers:["IE >= 8"]}'
+                loader: ExtractTextPlugin.extract('style-loader', 'css-loader!autoprefixer-loader?{browsers:["IE >= 8"]}!less-loader')
             },
+            // https://github.com/webpack/extract-text-webpack-plugin 单独引入css文件
+            {
+                test: /\.css$/,
+                loader: ExtractTextPlugin.extract('style-loader', 'css-loader', 'postcss-loader?pack=cleaner')
+            },
+
             // https://github.com/webpack/url-loader
             {
                 test: /\.(png|jpg|gif|woff|woff2|svg)$/,
@@ -100,7 +90,7 @@ module.exports = {
         new webpack.optimize.DedupePlugin({
             'process.env.NODE_ENV': JSON.stringify('production')
         }),
-        new ExtractTextPlugin('[name].[hash].css', {
+        new ExtractTextPlugin('[name].css', {
             disable: false,
             allChunks: true
         }),

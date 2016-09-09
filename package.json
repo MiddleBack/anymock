@@ -1,12 +1,12 @@
 {
   "name": "any-mock",
-  "version": "1.0.6",
+  "version": "1.0.9",
   "description": "集成rap和anyproxy，对于rap的支持暂缓（要先支持内部接口平台），目前可以把它当成一个anyproxy的UI。",
-  "main": "mock.js",
+  "main": "lib/bin/anymock.js",
   "scripts": {
     "start": "nodemon src/test/WebInterfaceTest.js",
     "compile": "babel -d lib/ src/",
-    "prepublish": "npm run compile && webpack --config lib/webpack.prod.config.babel.js"
+    "prepublish": "npm run compile && webpack --config lib/webpack.prod.config.babel.js --define process.env.NODE_ENV='\"production\"' --progress"
   },
   "author": "rainice0@gmail.com",
   "license": "ISC",
@@ -36,7 +36,7 @@
   },
   "homepage": "https://github.com/MiddleBack/anymock",
   "bin": {
-    "anymock": "lib/bin/bin.js"
+    "anymock": "lib/bin/anymock.js"
   },
   "bugs": {
     "url": "https://github.com/MiddleBack/anymock/issues"

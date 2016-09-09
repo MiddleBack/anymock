@@ -1,10 +1,11 @@
 import path from 'path';
 import webpack from 'webpack';
+import HtmlwebpackPlugin  from 'html-webpack-plugin';
 // import ExtractTextPlugin  from 'extract-text-webpack-plugin';
 /**
  * Created by tanxiangyuan on 16/8/23.
  */
-const appPath = path.resolve(__dirname, 'client');
+const appPath = path.resolve(__dirname, 'web/client');
 //测试环境
 const ip = '127.0.0.1';
 const port = 8020;
@@ -95,13 +96,13 @@ module.exports = {
     plugins: [
         new webpack.optimize.OccurenceOrderPlugin(),
         new webpack.HotModuleReplacementPlugin(),
-        new webpack.NoErrorsPlugin(),
+        new webpack.NoErrorsPlugin()/*,
         new webpack.DllReferencePlugin({
             context: __dirname,
-            /**
+            /!**
              * 在这里引入 manifest 文件
-             */
+             *!/
             manifest: require('./web/static/dist/vendor-manifest.json')
-        })
+        })*/
     ]
 };
