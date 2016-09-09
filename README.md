@@ -1,5 +1,5 @@
 # anymock
-[![npm](https://img.shields.io/badge/npm-1.0.4-green.svg)](https://www.npmjs.com/package/any-mock)
+[![npm](https://img.shields.io/badge/npm-1.0.6-green.svg)](https://www.npmjs.com/package/any-mock)
 
 她是一个本地的代理工具。<br>
 她也是一个接口管理平台的客户端,可以根据接口管理平台服务端的接口定义选择性的代理本机请求。<br>
@@ -11,10 +11,10 @@
 
 ### 安装
 * 安装 [nodeJS](http://nodejs.org)
-* `npm install -g anymock`
+* `npm install -g any-mock`
 
 ### 启动服务
-* 打开终端, `anymock`
+* 打开终端, `anymock start`
 
 ### 进入控制台
 * 访问 [http://127.0.0.1:8010](http://127.0.0.1:8010)

@@ -9,7 +9,7 @@ const color = require('colorful'),
     anyProxy = require("anyproxy"),
     events = require('events'),
     sysUtils = require('util'),
-    util = require('./lib/util');
+    util = require('./web/commons/util');
 
 //
 module.exports.proxyServer = function (opts) {

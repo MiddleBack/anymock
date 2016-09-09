@@ -1,10 +1,12 @@
 {
   "name": "any-mock",
-  "version": "1.0.4",
-  "description": "集成rap和anyproxy",
+  "version": "1.0.6",
+  "description": "集成rap和anyproxy，对于rap的支持暂缓（要先支持内部接口平台），目前可以把它当成一个anyproxy的UI。",
   "main": "mock.js",
   "scripts": {
-    "start": "nodemon test/WebInterfaceTest.js"
+    "start": "nodemon src/test/WebInterfaceTest.js",
+    "compile": "babel -d lib/ src/",
+    "prepublish": "npm run compile && webpack --config lib/webpack.prod.config.babel.js"
   },
   "author": "rainice0@gmail.com",
   "license": "ISC",
@@ -20,6 +22,7 @@
     "immutable": "^3.8.1",
     "lodash": "^4.15.0",
     "open": "0.0.5",
+    "rc-queue-anim": "^0.12.4",
     "react": "^15.3.1",
     "react-addons-css-transition-group": "^15.3.1",
     "react-dom": "^15.3.1",
@@ -33,7 +36,7 @@
   },
   "homepage": "https://github.com/MiddleBack/anymock",
   "bin": {
-    "anymock": "bin.js"
+    "anymock": "lib/bin/bin.js"
   },
   "bugs": {
     "url": "https://github.com/MiddleBack/anymock/issues"
@@ -49,7 +52,9 @@
     "url": "https://github.com/MiddleBack/anymock.git"
   },
   "devDependencies": {
+    "autoprefixer": "^6.4.1",
     "autoprefixer-loader": "^3.2.0",
+    "babel-cli": "^6.14.0",
     "babel-core": "^6.13.2",
     "babel-eslint": "^6.1.2",
     "babel-loader": "^6.2.4",
@@ -62,9 +67,11 @@
     "css-loader": "^0.24.0",
     "extract-text-webpack-plugin": "^1.0.1",
     "html-webpack-plugin": "^2.22.0",
+    "json-loader": "^0.5.4",
     "less": "^2.7.1",
     "less-loader": "^2.2.3",
     "postcss-loader": "^0.10.1",
+    "precss": "^1.4.0",
     "react-hot-loader": "^1.3.0",
     "style-loader": "^0.13.1",
     "webpack": "^1.13.2",

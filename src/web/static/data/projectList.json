@@ -1,0 +1,45 @@
+{
+  "code": 0,
+  "msg": "success",
+  "data": {
+    "title": "项目列表",
+    "projectList": [
+      {
+        "_id": "57ccd472e86a0d20084d1eae",
+        "username": "panshiyao",
+        "name": "project2",
+        "description": "222",
+        "updatetime": "2016-09-05T02:12:02.557Z",
+        "createtime": "2016-09-05T02:12:02.557Z",
+        "__v": 0
+      },
+      {
+        "_id": "57ccd46be86a0d20084d1ead",
+        "username": "panshiyao",
+        "name": "project1",
+        "description": "111",
+        "updatetime": "2016-09-05T02:11:55.487Z",
+        "createtime": "2016-09-05T02:11:55.487Z",
+        "__v": 0
+      },
+      {
+        "_id": "57ad6631390d008e66a4923c",
+        "username": "liuzhancai",
+        "name": "11111111111",
+        "description": "11111111111",
+        "updatetime": "2016-08-12T06:01:21.068Z",
+        "createtime": "2016-08-12T06:01:21.068Z",
+        "__v": 0
+      },
+      {
+        "_id": "57ac5b118c2c67c15e809839",
+        "username": "liuzhancai",
+        "name": "22",
+        "description": "222",
+        "updatetime": "2016-08-11T11:01:37.102Z",
+        "createtime": "2016-08-11T11:01:37.101Z",
+        "__v": 0
+      }
+    ]
+  }
+}

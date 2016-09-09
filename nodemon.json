@@ -4,8 +4,8 @@
         ".git",
         "nodemon.json",
         "node_modules/*",
-        "web/client/*",
-        "web/static/*"
+        "src/web/client/*",
+        "src/web/static/*"
     ],
     "verbose": true,
     "execMap": {
