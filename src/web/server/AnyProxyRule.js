@@ -2,6 +2,7 @@
  * Created by tanxiangyuan on 16/8/22.
  */
 import util from '../../models/util';
+import sortBy from 'lodash/sortBy';
 
 function mergeCORSHeader(reqHeader, originHeader) {
     var targetObj = originHeader || {};
@@ -21,13 +22,13 @@ function mergeCORSHeader(reqHeader, originHeader) {
 function findInterfaceDefByUrl(model, url) {
     if (model.interfaces) {
         //按路径长度倒排接口路径,最大匹配策略
-        var sortedInterfacePath = _.sortBy(Object.getOwnPropertyNames(model.interfaces), (o)=> {
+        var sortedInterfacePath = sortBy(Object.getOwnPropertyNames(model.interfaces), (o)=> {
                 return -o.length;
             }),
             length = sortedInterfacePath.length;
         for (var i = 0; i < length; i++) {
             if (url.match(util.buildRegExp(sortedInterfacePath[i]))) {
-                return model.interfaces(sortedInterfacePath[i]);//终止循环
+                return model.interfaces[sortedInterfacePath[i]];//终止循环
             }
         }
 
@@ -61,7 +62,14 @@ module.exports.buildRule = function (model) {
         },
 
         shouldUseLocalResponse: function (req, reqBody) {
-            return model.crossDomain || model.interfaces != null;
+            if(model.crossDomain && model.interfaces != null){
+                return true;
+            }
+            let interfaceDef = findInterfaceDefByUrl(model, req.url);
+            if(interfaceDef.rewriteData||interfaceDef.outputs){
+                return true;
+            }
+            return false;
         },
         dealLocalResponse: function (req, reqBody, callback) {
             var headers = req.headers,

@@ -12,7 +12,7 @@ function buildProxyOpts(settings) {
     if (settings) {
         if (settings.proxySetting) {
             if (settings.proxySetting.enableHttps) {
-                opts.type = 'https';
+                //opts.type = 'https';
                 opts.interceptHttps = true;
             }
             settings.proxySetting.globalProxy && (opts.setAsGlobalProxy = true);

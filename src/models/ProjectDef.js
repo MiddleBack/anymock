@@ -143,8 +143,9 @@ function getActiveInterfaceDef(cb) {
         let result = {};
         if (!err) {
             Object.getOwnPropertyNames(defs).forEach((propertyName)=> {
-                Object.getOwnPropertyNames(defs[propertyName]).forEach((interfacePath)=> {
-                    result[interfacePath] = interfaceDefFormate(defs[propertyName][interfacePath]);
+                let _interfaceDef = defs[propertyName];
+                _interfaceDef.active && _interfaceDef.prjInterfaces && Object.getOwnPropertyNames(_interfaceDef.prjInterfaces).forEach((interfacePath)=> {
+                    result[interfacePath] = interfaceDefFormate(_interfaceDef.prjInterfaces[interfacePath]);
                 });
             });
         }
@@ -157,12 +158,12 @@ function removeDef(id,cb) {
     });
 }
 function interfaceDefFormate(def) {
-    if (def.rewriteURL && ef.rewriteURL.active === true) {
+    if (def.rewriteURL && def.rewriteURL.active === true) {
         return {
             rewriteURL: def.rewriteURL.url
         }
     }
-    if (def.rewriteData && ef.rewriteData.active === true) {
+    if (def.rewriteData && def.rewriteData.active === true) {
         return {
             rewriteData: def.rewriteData.data
         }
