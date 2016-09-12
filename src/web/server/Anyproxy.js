@@ -4,13 +4,42 @@
 'use strict';
 import AnyProxy from 'anyproxy';
 import AnyProxyRule from './AnyProxyRule';
+import ip from 'ip';
+
+function buildProxyOpts(settings) {
+    var opts = {};
+
+    if (settings) {
+        if (settings.proxySetting) {
+            if (settings.proxySetting.enableHttps) {
+                opts.type = 'https';
+                opts.interceptHttps = true;
+            }
+            settings.proxySetting.globalProxy && (opts.setAsGlobalProxy = true);
+            settings.proxySetting.proxyPort && (opts.port = settings.proxySetting.proxyPort);
+            settings.proxySetting.proxyConsolePort && (opts.webPort = settings.proxySetting.proxyConsolePort);
+            settings.proxySetting.proxySocketPort && (opts.socketPort = settings.proxySetting.proxySocketPort);
+
+        }
+    }
+
+    return opts;
+
+}
+function buildRunningResp(opts) {
+    return {
+        running:true,
+        consoleUrl : `http://127.0.0.1:${opts.webPort}`,
+        proxyUrl:`http://${ip.address()}:${opts.port}`
+    }
+}
 
 exports.start = function (settings, cb) {
     if (this.server) {
         cb && cb.call(null, null, new Error('proxy server is running,can\'t be started twice!'));
         return;
     }
-    var opts = {};
+    var opts = buildProxyOpts(settings);
     var countModel = {
         clearCache: false,
         addConsole: false,
@@ -21,15 +50,6 @@ exports.start = function (settings, cb) {
     };
     if (settings) {
         if (settings.proxySetting) {
-            if (settings.proxySetting.enableHttps) {
-                opts.type = 'https';
-                opts.interceptHttps = true;
-                AnyProxy.generateRootCA();
-            }
-            settings.proxySetting.globalProxy && (opts.setAsGlobalProxy = true);
-            settings.proxySetting.proxyPort && (opts.port = settings.proxySetting.proxyPort);
-            settings.proxySetting.proxyConsolePort && (opts.webPort = settings.proxySetting.proxyConsolePort);
-            settings.proxySetting.proxySocketPort && (opts.socketPort = settings.proxySetting.proxySocketPort);
 
             if (settings.proxySetting.clearCache) {
                 countModel.clearCache = true;
@@ -55,9 +75,16 @@ exports.start = function (settings, cb) {
     try{
         opts.rule = AnyProxyRule.buildRule(countModel);
         this.server = new AnyProxy.proxyServer(opts);
-        cb && cb.call(null, `http://127.0.0.1:${opts.webPort}`);
+        cb && cb.call(null, buildRunningResp(opts));
     }catch (e){
         cb && cb.call(null,null,e);
+    }
+};
+exports.status = function (settings,cb) {
+    if (!this.server) {
+        cb({runing:false});
+    }else{
+        cb(buildRunningResp(buildProxyOpts(settings)));
     }
 };
 exports.stop = function (cb) {

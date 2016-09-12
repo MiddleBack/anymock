@@ -145,6 +145,33 @@ function fetchProjectDefFromRemote(url, cb) {
     });
 }
 /**
+ * 获取代理服务器状态
+ * @param cb
+ */
+function proxyStatus(cb) {
+    async.parallel({
+            //获取代理全局设置
+            proxySetting: function (callback) {
+                callback(null, ProxyDef.getCurrentDef());
+            },
+            //获取接口定义规则
+            interfaceSetting: function (callback) {
+                ProjectDef.getActiveInterfaceDef((defs, err)=> {
+                    callback(err, defs);
+                });
+            }
+        },
+        function (err, result) {
+            if (err) {
+                cb('获取代理服务器状态异常', err);
+            } else {
+                Anyproxy.status(result, cb);
+            }
+        }
+    );
+
+}
+/**
  * 启动代理服务器
  * @param cb
  */
@@ -276,6 +303,7 @@ function getInterfaces(cb) {
 module.exports.fetchInterfaceDefFromRemote = fetchInterfaceDefFromRemote;
 module.exports.fetchProjectDefFromRemote = fetchProjectDefFromRemote;
 module.exports.startProxy = startProxy;
+module.exports.proxyStatus = proxyStatus;
 module.exports.stopProxy = stopProxy;
 module.exports.saveProjects = saveProjects;
 module.exports.saveInterfaceDef = saveInterfaceDef;

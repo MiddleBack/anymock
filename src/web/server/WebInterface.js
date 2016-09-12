@@ -90,26 +90,36 @@ export default class WebInterface extends events.EventEmitter {
                 MiddleWare.stopProxy(function (msg, err) {
                     if (err) {
                         console.error(err);
-                        res.json(buildResponse(1, '', msg || 'start proxy error!'));
+                        res.json(buildResponse(1, '', err.message  || 'start proxy error!'));
                     } else {
                         res.json(buildSuccessReponse());
                     }
                 })
             } else if (queryKeys.indexOf('start') != -1) {
 
-                MiddleWare.startProxy(function (msg, err) {
+                MiddleWare.startProxy(function (data, err) {
                     if (err) {
                         console.error(err);
-                        res.json(buildResponse(1, '', msg || 'start proxy error!'));
+                        res.json(buildResponse(1, '', err.message || 'start proxy error!'));
                     } else {
-                        res.json(buildSuccessReponse(msg));
+                        res.json(buildSuccessReponse(data));
                     }
                 });
             } else {
                 next();
             }
         });
-
+        //代理服务器状态
+        app.get('/api/proxy/status',function (req,res,next) {
+            MiddleWare.proxyStatus(function (data, err) {
+                if (err) {
+                    console.error(err);
+                    res.json(buildResponse(1, '', err.message || 'start proxy error!'));
+                } else {
+                    res.json(buildSuccessReponse(data));
+                }
+            });
+        });
         //获取项目列表
         app.get('/api/project/list', function (req, res, next) {
             ProjectDef.getDefs((result, err)=> {

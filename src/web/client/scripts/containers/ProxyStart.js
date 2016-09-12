@@ -12,15 +12,33 @@ const PROXY_SERVER_STATE = {
 };
 const START_SERVER_URL = '/api/proxy/service?start';
 const STOP_SERVER_URL = '/api/proxy/service?stop';
+const SERVER_STATUS_URL = '/api/proxy/status';
 
 export default class ProxyStart extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             proxyServerState: PROXY_SERVER_STATE.STOPED,
-            consoleUrl: ''
+            consoleUrl: '',
+            proxyUrl: ''
         };
         this.proxyButtonClickHandler = this._proxyButtonClickHandler.bind(this);
+    }
+
+    componentDidMount() {
+        //获取服务器的启动状态
+        fetch.get(SERVER_STATUS_URL).then((reps)=> {
+            this.setState(merge(this.state, {
+                proxyServerState: Boolean(reps.json.data.running) ? PROXY_SERVER_STATE.RUNNING : PROXY_SERVER_STATE.STOPED,
+                consoleUrl: reps.json.data.consoleUrl,
+                proxyUrl: reps.json.data.proxyUrl
+            }));
+        }).catch(e=> {
+            Message.error(e.message);
+            this.setState(merge(this.state, {
+                proxyServerState: PROXY_SERVER_STATE.STOPED
+            }));
+        });
     }
 
     startServer() {
@@ -32,7 +50,8 @@ export default class ProxyStart extends React.Component {
         fetch.post(START_SERVER_URL).then((reps)=> {
             this.setState(merge(this.state, {
                 proxyServerState: PROXY_SERVER_STATE.RUNNING,
-                consoleUrl : reps.json.data
+                consoleUrl: reps.json.data.consoleUrl,
+                proxyUrl: reps.json.data.proxyUrl
             }));
         }).catch(e=> {
             Message.error(e.message);
@@ -96,11 +115,12 @@ export default class ProxyStart extends React.Component {
 
     }
 
-    buildMsg(){
-        if(this.state.proxyServerState === PROXY_SERVER_STATE.RUNNING){
+    buildMsg() {
+        if (this.state.proxyServerState === PROXY_SERVER_STATE.RUNNING) {
             return (<div className="console">
                 <p>代理服务器正在运行...</p>
-                控制台查看: <a href={this.state.consoleUrl} target="_blank">{this.state.consoleUrl}</a>
+                <p>控制台查看: <a href={this.state.consoleUrl} target="_blank">{this.state.consoleUrl}</a></p>
+                <p>代理地址: {this.state.proxyUrl}</p>
             </div>);
         }
     }
