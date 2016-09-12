@@ -25,16 +25,21 @@ class ProxySetting extends React.Component {
      */
     _handleSubmit(e) {
         e.preventDefault();
-        console.log('收到表单值：', this.props.form.getFieldsValue());
-        //设置页面默认值
-        fetch.post(API_GET_PROXY_DEF_URL,{
-            body: this.props.form.getFieldsValue()
-        }).then((resp)=> {
-            Message.success('代理设置保存成功!重启代理服务器可以应用当前设置。');
-        }).catch((err)=> {
-            console.error(err);
-            Message.error(err.message);
-        });
+        this.props.form.validateFields((errors, values) => {
+            if (errors) {
+                console.log(errors);
+                return;
+            }
+            //设置页面默认值
+            fetch.post(API_GET_PROXY_DEF_URL, {
+                body: values
+            }).then((resp)=> {
+                Message.success('代理设置保存成功!重启代理服务器可以应用当前设置。');
+            }).catch((err)=> {
+                console.error(err);
+                Message.error(err.message);
+            });
+        })
     }
 
     componentDidMount() {
@@ -48,7 +53,7 @@ class ProxySetting extends React.Component {
     }
 
     render() {
-        const {getFieldProps} = this.props.form;
+        const {getFieldProps, getFieldValue} = this.props.form;
         return (
             <Form horizontal onSubmit={this.handleSubmit}>
                 <Form.Item {...formItemLayout} label="启动系统级代理">
@@ -71,6 +76,15 @@ class ProxySetting extends React.Component {
                     <Switch checkedChildren="Y"
                             unCheckedChildren="N" {...getFieldProps('addConsole', {valuePropName: 'checked'})}/>
                 </Form.Item>
+                {getFieldValue('addConsole') ? (
+                    <Form.Item {...formItemLayout} label="eruda脚本地址" help="控制台脚本，填写时不要包含http:和https:协议类型">
+                        <Input {...getFieldProps('erudaUrl', {
+                            rules: [{
+                                required: true,
+                                message: 'eruda脚本地址必须填写'
+                            }]
+                        })} />
+                    </Form.Item>) : ''}
                 <Form.Item {...formItemLayout} label="追加自定义脚本">
                     <Input type="textarea" rows={4} {...getFieldProps('appendHtml')}/>
                 </Form.Item>

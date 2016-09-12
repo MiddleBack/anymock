@@ -43,6 +43,9 @@ exports.start = function (settings, cb) {
             if (settings.proxySetting.crossDomain) {
                 countModel.crossDomain = true;
             }
+            if (settings.proxySetting.erudaUrl) {
+                countModel.erudaUrl = settings.proxySetting.erudaUrl;
+            }
         }
 
         if (settings.interfaceSetting) {

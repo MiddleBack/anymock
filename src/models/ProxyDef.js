@@ -24,6 +24,7 @@ function getCurrentDef() {
             clearCache: true,  //是否清除http协议缓存
             crossDomain: true, //是否支持跨域
             addConsole: true, //为html页面添加控制台
+            erudaUrl:'//cdnjs.cloudflare.com/ajax/libs/eruda/1.1.2/eruda.min.js',//页面控制台eruda脚本
             appendHtml: '', //为html页面添加控制台
             proxyPort: 8001,//anyproxy的代理端口
             proxyConsolePort: 8002,//anyproxy的连接控制台端口

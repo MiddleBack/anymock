@@ -87,7 +87,7 @@ module.exports.buildRule = function (model) {
             if (/html/i.test(res.headers['content-type'])) {
 
                 if (model.addConsole) {
-                    newDataStr += '<script src=\"//cdn.jsdelivr.net/eruda/1.0.0/eruda.min.js\"></script><script>eruda.init();</script>';
+                    newDataStr += '<script src=\"'+model.erudaUrl+'\"></script><script>eruda.init();</script>';
                 }
                 if (model.appendHtml) {
                     newDataStr += model.appendHtml;
