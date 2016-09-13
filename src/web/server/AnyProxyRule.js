@@ -12,10 +12,10 @@ function mergeCORSHeader(reqHeader, originHeader) {
     delete targetObj["Access-Control-Allow-Methods"];
     delete targetObj["Access-Control-Allow-Headers"];
 
-    targetObj["access-control-allow-credentials"] = "true";
-    targetObj["access-control-allow-origin"] = reqHeader['origin'] || "-___-||";
-    targetObj["access-control-allow-methods"] = "GET, POST, PUT";
-    targetObj["access-control-allow-headers"] = reqHeader['access-control-request-headers'] || "-___-||";
+    targetObj["Access-Control-Allow-Credentials"] = "true";
+    targetObj["Access-Control-Allow-Origin"] = reqHeader['origin'] || "-___-||";
+    targetObj["Access-Control-Allow-Methods"] = "GET, POST, PUT";
+    targetObj["Access-Control-Allow-Headers"] = reqHeader['access-control-request-headers'] || "-___-||";
 
     return targetObj;
 }
@@ -75,19 +75,25 @@ module.exports.buildRule = function (model) {
             var headers = req.headers,
                 body = '',
                 code = 200;
-            if (model.crossDomain && req.method == "OPTIONS") {
+            if (model.crossDomain) {
                 headers = mergeCORSHeader(headers);
             }
-            var interfaceDef = findInterfaceDefByUrl(model, req.url);
-            if (interfaceDef) {
-                if (interfaceDef.rewriteData) {
-                    body = interfaceDef.rewriteData;
-                } else if (interfaceDef.outputs) {
-                    //TODO:验证输入参数
-                    //TODO:根据outputs生成mock数据
+            if(req.method != "OPTIONS"){
+                var interfaceDef = findInterfaceDefByUrl(model, req.url);
+                if (interfaceDef) {
+                    if (interfaceDef.rewriteData) {
+                        body = interfaceDef.rewriteData;
+                    } else if (interfaceDef.outputs) {
+                        //TODO:验证输入参数
+                        //TODO:根据outputs生成mock数据
 
+                    }
+                    if(interfaceDef.respType == 'JSON'){
+                        headers['Content-Type'] = 'application/json; charset=utf-8';
+                    }
                 }
             }
+
             callback(code, headers, body);
         },
         replaceServerResDataAsync: function (req, res, serverResData, callback) {

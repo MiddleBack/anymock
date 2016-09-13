@@ -125,6 +125,14 @@ export default class ProxyStart extends React.Component {
         }
     }
 
+    fetchDataTest(){
+        fetch.post('http://10.13.73.60:8001/wc/productList').then((json, response)=> {
+            Message.success('获取数据成功！');
+        }).catch(e=> {
+            Message.error('获取数据异常！');
+        });
+    }
+
     render() {
         return (
             <div className="proxy-start">

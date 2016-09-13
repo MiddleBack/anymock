@@ -41,8 +41,9 @@ let mergeInterface = (prj,_interface)=>{
             let newInterface = {
                 id: _interface._id,
                 desc: _interface.name,
-                type: _interface.type,
-                versions: {}
+                type: _interface.type && _interface.type.toUpperCase(),
+                versions: {},
+                respType:'JSON' //TODO:接口维护支持响应数据类型维护
             };
             newInterface.versions[_interface.__v] = {
                 desc: _interface.description,
@@ -289,6 +290,7 @@ function getInterfaces(cb) {
                         prjId: prjId,
                         prjName: prjs[prjId].prjName,
                         interfacePath: interfacePath,
+                        type:_current.type,
                         desc: _current.desc,
                         versions: _current.versions,
                         rewriteURL: _current.rewriteURL,

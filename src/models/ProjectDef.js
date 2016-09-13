@@ -160,11 +160,13 @@ function removeDef(id,cb) {
 function interfaceDefFormate(def) {
     if (def.rewriteURL && def.rewriteURL.active === true) {
         return {
+            respType:def.respType,
             rewriteURL: def.rewriteURL.url
         }
     }
     if (def.rewriteData && def.rewriteData.active === true) {
         return {
+            respType:def.respType,
             rewriteData: def.rewriteData.data
         }
     }
@@ -174,6 +176,7 @@ function interfaceDefFormate(def) {
             let _version = def.versions[names[l - 1]];
             if (_version.active === true) {
                 return {
+                    respType:def.respType,
                     inputs: _version.inputs,
                     outputs: _version.outputs
                 }

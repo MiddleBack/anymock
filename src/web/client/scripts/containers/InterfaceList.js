@@ -184,7 +184,10 @@ export default class InterfaceList extends React.Component {
         this.state.interfaces = source;
         this.setState(this.state);
     }
-
+    fetchMockData(record){
+        //TODO:fetch mockData
+        Message.info(record.type);
+    }
     render() {
         let TABLE_COLUMNS = [{
             title: '所属项目',
@@ -197,7 +200,10 @@ export default class InterfaceList extends React.Component {
             dataIndex: 'interfacePath',
             key: 'interfacePath',
             sorter: true,
-            width: '15%'
+            width: '15%',
+            render: (text, record, index)=> {
+                return <div><a href="javascript:;" onClick={()=>this.fetchMockData(record)}>{String(text)}</a> {record.type ? <div>[&nbsp;{record.type}&nbsp;]</div> : ''}</div>
+            }
         }, {
             title: '接口描述',
             dataIndex: 'desc',
@@ -228,7 +234,7 @@ export default class InterfaceList extends React.Component {
                                     </Select>&nbsp;&nbsp;
                                     <Tooltip placement="bottom"
                                              title={record.versions[currentVersion].desc}>
-                                        <Icon type="question-circle-o" style={{cursor:'pointer'}}/>
+                                        <Icon type="question-circle-o" style={{cursor: 'pointer'}}/>
                                     </Tooltip>
                                 </Radio>
                             )
@@ -310,15 +316,15 @@ export default class InterfaceList extends React.Component {
             }
         }];
 
-        if(this.pageInfo.selectPrjId){
-            TABLE_COLUMNS.splice(0,1);
+        if (this.pageInfo.selectPrjId) {
+            TABLE_COLUMNS.splice(0, 1);
         }
 
 
         return <div>
             <div className="table-toolbar">
                 <label>项目: </label>
-                <Select defaultValue={this.pageInfo.selectPrjId||''} ref="projectSelect" style={{minWidth: 150}}
+                <Select defaultValue={this.pageInfo.selectPrjId || ''} ref="projectSelect" style={{minWidth: 150}}
                         onChange={(val)=>this.projectChanged(val)}>
                     <Select.Option value="">全部</Select.Option>
                     {this.state.projects.map((p)=><Select.Option value={p.id}
