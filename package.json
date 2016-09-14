@@ -1,6 +1,6 @@
 {
   "name": "any-mock",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "集成rap和anyproxy，对于rap的支持暂缓（要先支持内部接口平台），目前可以把它当成一个anyproxy的UI。",
   "main": "lib/bin/anymock.js",
   "scripts": {
