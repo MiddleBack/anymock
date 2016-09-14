@@ -6,9 +6,9 @@ import async from 'async';
 import ProxyDef from '../../models/ProxyDef';
 import ProjectDef from '../../models/ProjectDef';
 import Anyproxy from './Anyproxy';
-import {isPlainObject,isArray} from 'lodash';
+import {isPlainObject, isArray} from 'lodash';
 import Fetch from '../commons/fetch';
-import {URL_DEF,BUSINESS_ERR} from '../commons/constants';
+import {URL_DEF, BUSINESS_ERR} from '../commons/constants';
 import urlTool from 'url';
 import util from 'util';
 
@@ -19,7 +19,7 @@ let fixProjectId = (prj)=> {
     return prj;
 };
 
-let mergeInterface = (prj,_interface)=>{
+let mergeInterface = (prj, _interface)=> {
     //获取到的interface是有效的,包含接口路径
     if (_interface.uri) {
         let existInterface = prj.prjInterfaces[_interface.uri];
@@ -43,7 +43,7 @@ let mergeInterface = (prj,_interface)=>{
                 desc: _interface.name,
                 type: _interface.type && _interface.type.toUpperCase(),
                 versions: {},
-                respType:'JSON' //TODO:接口维护支持响应数据类型维护
+                respType: 'JSON' //TODO:接口维护支持响应数据类型维护
             };
             newInterface.versions[_interface.__v] = {
                 desc: _interface.description,
@@ -74,14 +74,14 @@ function fetchInterfaceDefFromRemote(projectID, cb) {
                 if (!util.isObject(prj.prjInterfaces)) {
                     prj.prjInterfaces = {};
                 }
-                if(util.isNullOrUndefined(resp.json.data.interfaceList)
+                if (util.isNullOrUndefined(resp.json.data.interfaceList)
                     || !util.isArray(resp.json.data.interfaceList)
-                    || resp.json.data.interfaceList.length == 0){
-                    cb(new Error('',BUSINESS_ERR.INTERFACE_FETCH_EMPTY));
+                    || resp.json.data.interfaceList.length == 0) {
+                    cb(new Error('', BUSINESS_ERR.INTERFACE_FETCH_EMPTY));
                     return;
                 }
                 resp.json.data.interfaceList.forEach((_interface)=> {
-                    mergeInterface(prj,_interface);
+                    mergeInterface(prj, _interface);
                 });
 
                 //保存同步后项目
@@ -269,13 +269,27 @@ function getInterfaces(cb) {
     if (!cb || typeof cb != 'function') {
         throw new Error('callback is required and must be a function!');
     }
-    ProjectDef.getActiveDef((prjs, err)=> {
+    async.parallel({
+        prjs: function (callback) {
+            ProjectDef.getActiveDef((prjs, err)=> {
+                callback(err || null, prjs);
+            })
+        },
+        proxyState: function (callback) {
+            proxyStatus((data, err)=> {
+                callback(err || null, data);
+            })
+        }
+    }, (err, data)=> {
         if (err) {
             cb(err);
         } else {
+            let prjs = data.prjs;
+            let proxyState = data.proxyState;
             let result = {
                 prjs: [],
-                interfaces: []
+                interfaces: [],
+                proxyState
             };
             Object.keys(prjs).forEach((prjId)=> {
                 result.prjs.push({
@@ -290,7 +304,7 @@ function getInterfaces(cb) {
                         prjId: prjId,
                         prjName: prjs[prjId].prjName,
                         interfacePath: interfacePath,
-                        type:_current.type,
+                        type: _current.type,
                         desc: _current.desc,
                         versions: _current.versions,
                         rewriteURL: _current.rewriteURL,

@@ -19,6 +19,11 @@ function mergeCORSHeader(reqHeader, originHeader) {
 
     return targetObj;
 }
+function clearCache(header) {
+    header["Cache-Control"] = "no-cache, no-store, must-revalidate";
+    header["Pragma"] = "no-cache";
+    header["Expires"] = 0;
+}
 function findInterfaceDefByUrl(model, url) {
     if (model.interfaces) {
         //按路径长度倒排接口路径,最大匹配策略
@@ -62,7 +67,7 @@ module.exports.buildRule = function (model) {
         },
 
         shouldUseLocalResponse: function (req, reqBody) {
-            if(model.crossDomain && model.interfaces != null){
+            if(req.method == "OPTIONS"){
                 return true;
             }
             let interfaceDef = findInterfaceDefByUrl(model, req.url);
@@ -77,6 +82,9 @@ module.exports.buildRule = function (model) {
                 code = 200;
             if (model.crossDomain) {
                 headers = mergeCORSHeader(headers);
+            }
+            if (model.clearCache) {
+                clearCache(headers);
             }
             if(req.method != "OPTIONS"){
                 var interfaceDef = findInterfaceDefByUrl(model, req.url);
@@ -137,9 +145,7 @@ module.exports.buildRule = function (model) {
         replaceResponseHeader: function (req, res, header) {
             header = header || {};
             if (model.clearCache) {
-                header["Cache-Control"] = "no-cache, no-store, must-revalidate";
-                header["Pragma"] = "no-cache";
-                header["Expires"] = 0;
+                clearCache(header);
             }
             if(model.crossDomain){
                 header = mergeCORSHeader(req.headers,header);

@@ -11,15 +11,15 @@ import Radio from 'antd/lib/radio';
 import Message from 'antd/lib/message';
 import Select from 'antd/lib/select';
 import Tooltip from 'antd/lib/tooltip';
+import Modal from 'antd/lib/modal';
 import CloneDeep from 'lodash/cloneDeep';
 import Fetch from '../../../commons/fetch';
 import './less/IntrefaceList.less';
 
 import {INTERFACE_DEAL_TYPE, BUSINESS_ERR} from '../../../commons/constants';
 
-let buildDataStore = (reps)=> {
-    let projects = {};
-    reps.interfaces.forEach((_interface)=> {
+let buildDataStore = (resp)=> {
+    resp.interfaces.forEach((_interface)=> {
 
         //计算接口数据处理类型 优先级为:rewriteURL?rewriteData?version
         _interface.dealType = _interface.rewriteURL && _interface.rewriteURL.active ? INTERFACE_DEAL_TYPE.DEAL_TYPE_URL
@@ -46,13 +46,14 @@ let buildDataStore = (reps)=> {
     });
 
     return {
-        projects: reps.prjs.map((prj)=> {
+        projects: resp.prjs.map((prj)=> {
             return {
                 id: prj.prjId,
                 name: prj.prjName
             }
         }),
-        interfaces: reps.interfaces
+        interfaces: resp.interfaces,
+        proxyState: resp.proxyState
     };
 };
 let buildVersionInfo = (record)=> {
@@ -90,7 +91,8 @@ export default class InterfaceList extends React.Component {
         super(props);
         this.state = {
             projects: [],
-            interfaces: []
+            interfaces: [],
+            proxyState: {}
         };
         this.selectPrjId = null;
         this.pageInfo = {
@@ -184,10 +186,37 @@ export default class InterfaceList extends React.Component {
         this.state.interfaces = source;
         this.setState(this.state);
     }
-    fetchMockData(record){
-        //TODO:fetch mockData
-        Message.info(record.type);
+
+    fetchMockData(record) {
+        if (this.state.proxyState && this.state.proxyState.running) {
+            Fetch.fetch(this.state.proxyState.proxyUrl + record.interfacePath,{
+                method: record.type || 'GET',
+                credentials: 'include', //设置该属性可以把 cookie 信息传到后台
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json; charset=utf-8',
+                    'x-requested-with': 'XMLHttpRequest'
+                }
+            }).then(response =>
+                response.json().then(json => ({json, response}))
+            ).then(({json,response})=>{
+                Modal.success({
+                    title:`${record.type||'GET'} - ${record.interfacePath}`,
+                    content:(
+                        <Input type="textarea"
+                               style={{minHeight:300,width:400}}
+                               readOnly={true}
+                               defaultValue={JSON.stringify(json,null,'\t')}/>
+                    )
+                });
+            }).catch((err)=>{
+                Message.error(`获取mock数据异常：${err.message}`);
+            });
+        } else {
+            Message.info('先启动proxy server！');
+        }
     }
+
     render() {
         let TABLE_COLUMNS = [{
             title: '所属项目',
@@ -202,7 +231,9 @@ export default class InterfaceList extends React.Component {
             sorter: true,
             width: '15%',
             render: (text, record, index)=> {
-                return <div><a href="javascript:;" onClick={()=>this.fetchMockData(record)}>{String(text)}</a> {record.type ? <div>[&nbsp;{record.type}&nbsp;]</div> : ''}</div>
+                return <div><a href="javascript:;"
+                               onClick={()=>this.fetchMockData(record)}>{String(text)}</a> {record.type ?
+                    <div>[&nbsp;{record.type}&nbsp;]</div> : ''}</div>
             }
         }, {
             title: '接口描述',

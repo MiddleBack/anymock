@@ -1,7 +1,6 @@
 import path from 'path';
 import webpack from 'webpack';
-import HtmlwebpackPlugin  from 'html-webpack-plugin';
-// import ExtractTextPlugin  from 'extract-text-webpack-plugin';
+import ExtractTextPlugin  from 'extract-text-webpack-plugin';
 /**
  * Created by tanxiangyuan on 16/8/23.
  */
@@ -68,13 +67,14 @@ module.exports = {
             },
             // https://github.com/webpack/extract-text-webpack-plugin 单独引入css文件
             {
-                test: /\.css$/,
-                loader: "style-loader!css-loader"
-            },
-            {
                 test: /\.less/,
                 exclude: /node_modules/,
-                loader: 'style-loader!css-loader!less-loader!autoprefixer-loader?{browsers:["IE >= 8"]}'
+                loader: ExtractTextPlugin.extract('style-loader', 'css-loader!autoprefixer-loader?{browsers:["IE >= 8"]}!less-loader')
+            },
+            // https://github.com/webpack/extract-text-webpack-plugin 单独引入css文件
+            {
+                test: /\.css$/,
+                loader: ExtractTextPlugin.extract('style-loader', 'css-loader')
             },
             // https://github.com/webpack/url-loader
             {
@@ -96,6 +96,7 @@ module.exports = {
     plugins: [
         new webpack.optimize.OccurenceOrderPlugin(),
         new webpack.HotModuleReplacementPlugin(),
+        new ExtractTextPlugin('[name].css'),
         new webpack.NoErrorsPlugin()/*,
         new webpack.DllReferencePlugin({
             context: __dirname,

@@ -1,4 +1,4 @@
-import 'isomorphic-fetch';
+import fetch from 'isomorphic-fetch';
 import {assign} from 'lodash';
 // 定义 fetch 默认选项， 看 https://github.com/github/fetch
 const defaultOptions = {
@@ -91,5 +91,6 @@ function del(url,params={}) {
 export default {
     get,
     post,
-    del
+    del,
+    fetch:fetch
 };
