@@ -1,5 +1,8 @@
 import fetch from 'isomorphic-fetch';
 import {assign} from 'lodash';
+
+require('es6-promise').polyfill();
+
 // 定义 fetch 默认选项， 看 https://github.com/github/fetch
 const defaultOptions = {
     method: 'post',

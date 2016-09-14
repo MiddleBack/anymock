@@ -47,7 +47,7 @@ function getDefsList(cb) {
         });
 
     } else {
-        cb.call(null, {})
+        cb.call(null, [])
     }
 }
 function buildFilePathById(prjId) {
