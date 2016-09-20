@@ -10,7 +10,7 @@ exports.INTERFACE_DEAL_TYPE = {
 
 exports.URL_DEF = {
     PROJECT_LIST : 'http://localhost:8011/data/projectList.json',
-    REMOTE_PROJECT_DEF_PATH : '/api/project/%s/interfaces'
+    REMOTE_PROJECT_DEF_PATH : '/api/projects/%s/interfaces'
 };
 
 exports.BUSINESS_ERR = {

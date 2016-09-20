@@ -98,7 +98,7 @@ class ProjectListTable extends React.Component {
                     : <span>{String(text)}</span>
             }
         }, {
-            title: '项目远程路径',
+            title: '项目接口远程路径',
             dataIndex: 'defURL',
             key: 'defURL',
             width: '30%',
@@ -146,7 +146,7 @@ class ProjectListTable extends React.Component {
                             defaultChecked={record.active} {...getFieldProps('active', {valuePropName: 'checked'})}/>
                     </Form.Item>)
                     : (<Switch defaultChecked={record.active}
-                               onChange={()=>this.props.onToggleProjectActive && this.props.onToggleProjectActive(text, record, index)}/>)
+                               onChange={()=>!isCreate && this.props.onToggleProjectActive && this.props.onToggleProjectActive(text, record, index)}/>)
             }
         }, {
             title: '操作',

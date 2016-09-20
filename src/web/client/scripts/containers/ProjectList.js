@@ -79,7 +79,7 @@ class ProjectList extends React.Component {
             //start to call api
             Fetch.post('/api/project/remote/list', {
                 body: {
-                    url: values.projectsUrl_prefix + values.projectsUrl
+                    url: values.projectsUrl_prefix + values.projectsUrl.replace(/http[s]?:\/\//,'')
                 }
             }).then((resp)=> {
                 this.state.table.data = dealProjectsMap(resp.json.data);
@@ -199,7 +199,7 @@ class ProjectList extends React.Component {
                                                {...getFieldProps('projectsUrl', {
                                                    rules: [{
                                                        required: true,
-                                                       message: '请填写项目管理平台项目列表地址'
+                                                       message: '请填写正确的项目管理平台项目列表地址'
                                                    }]
                                                })}/>
                                     </Form.Item>

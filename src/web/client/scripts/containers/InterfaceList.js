@@ -107,11 +107,7 @@ export default class InterfaceList extends React.Component {
             this.dataStore = buildDataStore(resp.json.data);
             this.setState(this.filterInterface());
         }).catch((err)=> {
-            if (err.id == BUSINESS_ERR.INTERFACE_FETCH_EMPTY) {
-                Message.info('当前已经是最新最新的版本咯~');
-            } else {
-                Message.error(err.msg);
-            }
+            Message.error(err.msg);
         });
     }
 
@@ -162,7 +158,11 @@ export default class InterfaceList extends React.Component {
             this.dataStore = buildDataStore(resp.json.data);
             this.setState(this.filterInterface());
         }).catch((err)=> {
-            Message.error(`同步接口设置信息失败!${err}`);
+            if (err.code == BUSINESS_ERR.INTERFACE_FETCH_EMPTY) {
+                Message.info('当前已经是最新最新的版本咯~');
+            } else {
+                Message.error(`同步接口设置信息失败!${err}`);
+            }
             this.pageInfo.tableLoading = this.pageInfo.syncLoading = false;
             this.setState(this.state);
         });

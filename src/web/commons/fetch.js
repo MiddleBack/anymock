@@ -69,8 +69,9 @@ function request({url, body = {}, options, loginVerify = true}) {
             response.json().then(json => ({json, response}))
         ).then(({json, response}) => {
             if (json.code != 0) {
-                console.log(json.data);
-                return Promise.reject(new Error(json.msg,json.code));
+                let error = new Error(json.msg);
+                error.code = json.code;
+                return Promise.reject(error);
             }
             return {json, response};
         }).catch((error) => {

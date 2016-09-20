@@ -56,6 +56,26 @@ let mergeInterface = (prj, _interface)=> {
     }
 };
 
+let buildProjectInerfacesUrl = function (prjUrl, prjId) {
+    return prjUrl.protocol + '//' + prjUrl.hostname
+        + (prjUrl.port == '80' ? '' : ':' + prjUrl.port)
+        + util.format(URL_DEF.REMOTE_PROJECT_DEF_PATH, prjId);
+};
+let versionMockJSONDeal = function (versions) {
+    if(versions){
+        Object.keys(versions).forEach(function (versionKey) {
+            let version = versions[versionKey];
+            if(version.inputs){
+                version.inputs = JSON.stringify(version.inputs,null,'\t');
+            }
+            if(version.outputs){
+                version.outputs = JSON.stringify(version.outputs,null,'\t');
+            }
+        })
+
+    }
+    return versions;
+};
 /**
  * 从服务器获取项目下的接口定义信息
  * @param projectID
@@ -77,7 +97,7 @@ function fetchInterfaceDefFromRemote(projectID, cb) {
                 if (util.isNullOrUndefined(resp.json.data.interfaceList)
                     || !util.isArray(resp.json.data.interfaceList)
                     || resp.json.data.interfaceList.length == 0) {
-                    cb(new Error('', BUSINESS_ERR.INTERFACE_FETCH_EMPTY));
+                    cb(new Error(BUSINESS_ERR.INTERFACE_FETCH_EMPTY));
                     return;
                 }
                 resp.json.data.interfaceList.forEach((_interface)=> {
@@ -97,6 +117,7 @@ function fetchInterfaceDefFromRemote(projectID, cb) {
     });
 
 }
+
 /**
  * 获取接口管理平台服务端获取项目定义信息
  * @param url
@@ -108,14 +129,12 @@ function fetchProjectDefFromRemote(url, cb) {
             return function (callback) {
                 ProjectDef.getDef(prj._id, (err, prjData)=> {
                     if (err) {//not found,新建文件对象
-                        let urlObject = urlTool.parse(url);
-                        urlObject.path = util.format(URL_DEF.REMOTE_PROJECT_DEF_PATH, prj._id);
                         prjData = {
                             prjName: prj.name,
                             prjId: prj._id,
                             active: false,
                             desc: prj.description,
-                            defURL: urlTool.format(urlObject)
+                            defURL:buildProjectInerfacesUrl(urlTool.parse(url),prj._id)
                         };
                     } else {//merge
                         prjData.prjName = prj.name;
@@ -142,6 +161,7 @@ function fetchProjectDefFromRemote(url, cb) {
         });
 
     }).catch((err)=> {
+        console.error(`fetch from : ${url} `, err);
         cb(err);
     });
 }
@@ -306,7 +326,7 @@ function getInterfaces(cb) {
                         interfacePath: interfacePath,
                         type: _current.type,
                         desc: _current.desc,
-                        versions: _current.versions,
+                        versions: versionMockJSONDeal(_current.versions),
                         rewriteURL: _current.rewriteURL,
                         rewriteData: _current.rewriteData
                     })
