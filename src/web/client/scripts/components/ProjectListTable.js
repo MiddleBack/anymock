@@ -88,6 +88,7 @@ class ProjectListTable extends React.Component {
                 return record.edit ?
                     (<Form.Item>
                         <Input defaultValue={record.prjName}
+                               key={'e_prjName_' + record.prjId}
                                {...getFieldProps('prjName', {
                                    rules: [{
                                        required: true,
@@ -106,12 +107,16 @@ class ProjectListTable extends React.Component {
                 return record.edit ?
                     (<Form.Item>
                         <Input defaultValue={record.defURL}
+                               key={'e_defURL_' + record.prjId}
                                style={{minWidth: 200}}
-                               addonBefore={<Select defaultValue="http://"
-                                                    style={{width: 80}} {...getFieldProps('defURL_preFix', {initialValue: 'http://'})}>
-                                   <Select.Option value="http://">http://</Select.Option>
-                                   <Select.Option value="https://">https://</Select.Option>
-                               </Select>}
+                               addonBefore={
+                                   <Select defaultValue="http://"
+                                           key={'e_defURL_preFix_'+record.prjId}
+                                           style={{width: 80}}
+                                           {...getFieldProps('defURL_preFix', {initialValue: 'http://'})}>
+                                       <Select.Option value="http://">http://</Select.Option>
+                                       <Select.Option value="https://">https://</Select.Option>
+                                   </Select>}
                                {...getFieldProps('defURL_subFix', {
                                    rules: [{
                                        required: true,
@@ -129,7 +134,9 @@ class ProjectListTable extends React.Component {
             render: (text, record, index)=> {
                 return record.edit ?
                     (<Form.Item>
-                        <Input defaultValue={record.prjPath || ''} {...getFieldProps('prjPath')}/>
+                        <Input defaultValue={record.prjPath || ''}
+                               key={'e_path_' + record.prjId}
+                               {...getFieldProps('prjPath')}/>
                     </Form.Item>)
                     : <span>{text || ''}</span>
             }
@@ -143,9 +150,12 @@ class ProjectListTable extends React.Component {
                 return record.edit ?
                     (<Form.Item>
                         <Switch
-                            defaultChecked={record.active} {...getFieldProps('active', {valuePropName: 'checked'})}/>
+                            defaultChecked={record.active}
+                            key={'e_switch_' + record.prjId}
+                            {...getFieldProps('active', {valuePropName: 'checked'})}/>
                     </Form.Item>)
                     : (<Switch defaultChecked={record.active}
+                               key={'switch_' + record.prjId}
                                onChange={()=>!isCreate && this.props.onToggleProjectActive && this.props.onToggleProjectActive(text, record, index)}/>)
             }
         }, {

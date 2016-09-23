@@ -22,6 +22,7 @@
     "hbs": "^4.0.0",
     "immutable": "^3.8.1",
     "lodash": "^4.15.0",
+    "mockjs": "^1.0.1-beta3",
     "open": "0.0.5",
     "rc-queue-anim": "^0.12.4",
     "react": "^15.3.1",

@@ -99,16 +99,16 @@ function getDef(prjId, cb) {
         throw new Error('invalid parameter, callback is required!');
     }
     if (!prjId) {
-        cb.call(null,new Error('invalid parameter, prjId is required!'));
+        cb.call(null, new Error('invalid parameter, prjId is required!'));
         return;
     }
     let filePath = buildFilePathById(prjId);
     if (!fs.existsSync(filePath)) {
-        cb.call(null,new Error(`invalid prjId:${prjId}`));
+        cb.call(null, new Error(`invalid prjId:${prjId}`));
         return;
     }
     fs.readFile(filePath, fileReadOptions, function (err, data) {
-        cb.call(null,err,data ? JSON.parse(data) : {});
+        cb.call(null, err, data ? JSON.parse(data) : {});
     })
 }
 /**
@@ -152,21 +152,21 @@ function getActiveInterfaceDef(cb) {
         cb.call(null, result, err);
     });
 }
-function removeDef(id,cb) {
-    fs.unlink(buildFilePathById(id),(err)=>{
+function removeDef(id, cb) {
+    fs.unlink(buildFilePathById(id), (err)=> {
         cb(err);
     });
 }
 function interfaceDefFormate(def) {
     if (def.rewriteURL && def.rewriteURL.active === true) {
         return {
-            respType:def.respType,
+            respType: def.respType,
             rewriteURL: def.rewriteURL.url
         }
     }
     if (def.rewriteData && def.rewriteData.active === true) {
         return {
-            respType:def.respType,
+            respType: def.respType,
             rewriteData: def.rewriteData.data
         }
     }
@@ -176,9 +176,10 @@ function interfaceDefFormate(def) {
             let _version = def.versions[names[l - 1]];
             if (_version.active === true) {
                 return {
-                    respType:def.respType,
+                    respType: def.respType,
                     inputs: _version.inputs,
-                    outputs: _version.outputs
+                    outputs: _version.outputs,
+                    resMockRule: _version.resMockRule
                 }
             }
         }
@@ -186,7 +187,7 @@ function interfaceDefFormate(def) {
     return {};
 }
 function buildId() {
-    return ('cus_'+ Date.now() + Math.random()).replace(/\./g,'');
+    return ('cus_' + Date.now() + Math.random()).replace(/\./g, '');
 }
 exports.saveDef = saveDef;
 exports.getDef = getDef;

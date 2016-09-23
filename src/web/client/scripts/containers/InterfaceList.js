@@ -84,7 +84,12 @@ let dealRowForApply = (row)=> {
 
     return newRow;
 };
-
+let generateUrlHasParam = function (url) {
+    while(/\/\:[^\/]*/.test(url)){
+        url = url.replace(/\/\:[^\/]*/,('/'+Math.random()*10).replace(/\./,''))
+    }
+    return url;
+};
 export default class InterfaceList extends React.Component {
 
     constructor(props) {
@@ -156,7 +161,7 @@ export default class InterfaceList extends React.Component {
         Fetch.post(`/api/project/${this.pageInfo.selectPrjId}/interface/remote`).then((resp)=> {
             this.pageInfo.tableLoading = this.pageInfo.syncLoading = false;
             this.dataStore = buildDataStore(resp.json.data);
-            this.setState(this.filterInterface());
+            this.setState(this.filterInterface(this.pageInfo.selectPrjId));
         }).catch((err)=> {
             if (err.code == BUSINESS_ERR.INTERFACE_FETCH_EMPTY) {
                 Message.info('当前已经是最新最新的版本咯~');
@@ -189,7 +194,9 @@ export default class InterfaceList extends React.Component {
 
     fetchMockData(record) {
         if (this.state.proxyState && this.state.proxyState.running) {
-            Fetch.fetch(this.state.proxyState.proxyUrl + record.interfacePath,{
+            let vailidPath = generateUrlHasParam(record.interfacePath);
+            let fetchUrl = this.state.proxyState.proxyUrl + vailidPath;
+            Fetch.fetch(fetchUrl, {
                 method: record.type || 'GET',
                 credentials: 'include', //设置该属性可以把 cookie 信息传到后台
                 headers: {
@@ -199,17 +206,18 @@ export default class InterfaceList extends React.Component {
                 }
             }).then(response =>
                 response.json().then(json => ({json, response}))
-            ).then(({json,response})=>{
+            ).then(({json, response})=> {
                 Modal.success({
-                    title:`${record.type||'GET'} - ${record.interfacePath}`,
+                    title:`${record.type||'GET'} - ${fetchUrl}`,
+                    width:600,
                     content:(
                         <Input type="textarea"
-                               style={{minHeight:300,width:400}}
+                               style={{minHeight:400}}
                                readOnly={true}
                                defaultValue={JSON.stringify(json,null,'\t')}/>
                     )
                 });
-            }).catch((err)=>{
+            }).catch((err)=> {
                 Message.error(`获取mock数据异常：${err.message}`);
             });
         } else {
@@ -299,8 +307,8 @@ export default class InterfaceList extends React.Component {
                                        key={'outputs_' + index + '_' + currentVersion}
                                        rows={4}
                                        className="input"
-                                       onChange={(e)=>record.versions[currentVersion].outputs = e.target.value}
-                                       defaultValue={_version.outputs}/>
+                                       onChange={(e)=>record.versions[currentVersion].resMockRule = e.target.value}
+                                       defaultValue={_version.resMockRule}/>
                             </div>
                         );
                     case INTERFACE_DEAL_TYPE.DEAL_TYPE_URL :
@@ -367,7 +375,6 @@ export default class InterfaceList extends React.Component {
                                                             onClick={(e)=> this.sync()}>{this.pageInfo.syncLoading ? '正在同步' : '从服务端同步当前项目的接口信息'}</Button>)
                 }
             </div>
-
             <Table columns={TABLE_COLUMNS}
                    ref="interfaceTable"
                    loading={this.pageInfo.tableLoading}

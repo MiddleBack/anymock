@@ -3,6 +3,7 @@
  */
 import util from '../../models/util';
 import sortBy from 'lodash/sortBy';
+import Mock from 'mockjs'
 
 function mergeCORSHeader(reqHeader, originHeader) {
     var targetObj = originHeader || {};
@@ -54,7 +55,7 @@ function buildUrlModel(url) {
 module.exports.buildRule = function (model) {
     return {
         summary: function () {
-            return "this is a anymock rule for AnyProxy";
+            return "this is a anymock rule for AnyProxy,enjoy your trip!";
         },
         shouldInterceptHttpsReq: function (req) {
             return true;
@@ -71,7 +72,7 @@ module.exports.buildRule = function (model) {
                 return true;
             }
             let interfaceDef = findInterfaceDefByUrl(model, req.url);
-            if(interfaceDef.rewriteData||interfaceDef.outputs){
+            if(interfaceDef.rewriteData||interfaceDef.resMockRule){
                 return true;
             }
             return false;
@@ -91,10 +92,9 @@ module.exports.buildRule = function (model) {
                 if (interfaceDef) {
                     if (interfaceDef.rewriteData) {
                         body = interfaceDef.rewriteData;
-                    } else if (interfaceDef.outputs) {
+                    } else if (interfaceDef.resMockRule) {
                         //TODO:验证输入参数
-                        //TODO:根据outputs生成mock数据
-
+                        body = JSON.stringify(Mock.mock(eval('('+interfaceDef.resMockRule+')')));
                     }
                     if(interfaceDef.respType == 'JSON'){
                         headers['Content-Type'] = 'application/json; charset=utf-8';

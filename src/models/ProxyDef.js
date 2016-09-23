@@ -7,7 +7,6 @@ import color from 'colorful';
 
 const anymockHome = utils.getAnyMockHome(),
     filePath = path.join(anymockHome, 'proxy.json');
-
 function getCurrentDef() {
     let fileContent;
     if (fs.existsSync(filePath)) {

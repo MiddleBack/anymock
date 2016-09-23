@@ -18,8 +18,16 @@ let fixProjectId = (prj)=> {
     }
     return prj;
 };
+let fixInterfaceUri = (_interface)=> {
+    if (_interface && _interface.uri && !_interface.uri.startsWith('/')) {
+        _interface.uri = '/' + _interface.uri;
+    }
+};
 
 let mergeInterface = (prj, _interface)=> {
+    //修复uri不带'/'的问题
+    fixInterfaceUri(_interface);
+
     //获取到的interface是有效的,包含接口路径
     if (_interface.uri) {
         let existInterface = prj.prjInterfaces[_interface.uri];
@@ -31,6 +39,7 @@ let mergeInterface = (prj, _interface)=> {
                     desc: _interface.description,
                     inputs: _interface.reqParams,
                     outputs: _interface.resParams,
+                    resMockRule: _interface.resMockRule,
                     active: !existInterface.versions
                     && (!existInterface.rewriteURL || !existInterface.rewriteURL.active)
                     && (!existInterface.rewriteData || !existInterface.rewriteData.active)//没有版本时激活当前版本
@@ -49,6 +58,7 @@ let mergeInterface = (prj, _interface)=> {
                 desc: _interface.description,
                 inputs: _interface.reqParams,
                 outputs: _interface.resParams,
+                resMockRule: _interface.resMockRule,
                 active: true
             };
             prj.prjInterfaces[_interface.uri] = newInterface;
@@ -61,15 +71,21 @@ let buildProjectInerfacesUrl = function (prjUrl, prjId) {
         + (prjUrl.port == '80' ? '' : ':' + prjUrl.port)
         + util.format(URL_DEF.REMOTE_PROJECT_DEF_PATH, prjId);
 };
+let buildInerfacesMockTemplateUrl = function (prjUrl, prjId, interfaceId) {
+    prjUrl = urlTool.parse(prjUrl);
+    return prjUrl.protocol + '//' + prjUrl.hostname
+        + (prjUrl.port == '80' ? '' : ':' + prjUrl.port)
+        + util.format(URL_DEF.REMOTE_INTERFACE_MOCK_PATH, prjId, interfaceId);
+};
 let versionMockJSONDeal = function (versions) {
-    if(versions){
+    if (versions) {
         Object.keys(versions).forEach(function (versionKey) {
             let version = versions[versionKey];
-            if(version.inputs){
-                version.inputs = JSON.stringify(version.inputs,null,'\t');
+            if (version.inputs) {
+                version.inputs = JSON.stringify(version.inputs, null, '\t');
             }
-            if(version.outputs){
-                version.outputs = JSON.stringify(version.outputs,null,'\t');
+            if (version.outputs) {
+                version.outputs = JSON.stringify(version.outputs, null, '\t');
             }
         })
 
@@ -82,37 +98,60 @@ let versionMockJSONDeal = function (versions) {
  * @param cb
  */
 function fetchInterfaceDefFromRemote(projectID, cb) {
-
-    //读取本地项目
-    ProjectDef.getDef(projectID, (err, prj)=> {
+    async.waterfall([
+        //读取本地项目
+        function (callback) {
+            ProjectDef.getDef(projectID, (err, prj)=> {
+                callback(err, prj)
+            });
+        },
+        //通过项目定义中的项目接口地址获取接口信息
+        function (prj, callback) {
+            Fetch.get(prj.defURL).then((resp)=> {
+                if (util.isNullOrUndefined(resp.json.data.interfaceList)
+                    || !util.isArray(resp.json.data.interfaceList)
+                    || resp.json.data.interfaceList.length == 0) {
+                    callback(new Error(BUSINESS_ERR.INTERFACE_FETCH_EMPTY));
+                } else {
+                    callback(null, prj, resp.json.data.interfaceList);
+                }
+            }).catch((err)=> {
+                callback(err);
+            });
+        },
+        //获取接口输出参数的mock模板
+        function (prj, interfaceList, callback) {
+            async.parallel(interfaceList.map((_if)=> {
+                return (callback2) => {
+                    Fetch.get(buildInerfacesMockTemplateUrl(prj.defURL, prj.prjId, _if._id)).then(function (resp) {
+                        _if.resMockRule = resp.json.data.resMockRule;
+                        callback2(null);
+                    }).catch(function (err) {
+                        callback2(err);
+                    });
+                };
+            }), function (err, result) {
+                callback(err, prj, interfaceList);
+            });
+        }
+    ], function (err, prj, interfaceList) {
         if (err) {
             console.error(err);
             cb(err);
         } else {
-            Fetch.get(prj.defURL).then((resp)=> {
-                //同步项目中接口与获取到接口
-                if (!util.isObject(prj.prjInterfaces)) {
-                    prj.prjInterfaces = {};
-                }
-                if (util.isNullOrUndefined(resp.json.data.interfaceList)
-                    || !util.isArray(resp.json.data.interfaceList)
-                    || resp.json.data.interfaceList.length == 0) {
-                    cb(new Error(BUSINESS_ERR.INTERFACE_FETCH_EMPTY));
-                    return;
-                }
-                resp.json.data.interfaceList.forEach((_interface)=> {
-                    mergeInterface(prj, _interface);
-                });
-
-                //保存同步后项目
-                ProjectDef.saveDef(prj);
-
-                //构建返回数据
-                getInterfaces(cb);
-            }).catch((err)=> {
-                console.error(err);
-                cb(err);
+            //同步项目中接口与获取到接口
+            if (!util.isObject(prj.prjInterfaces)) {
+                prj.prjInterfaces = {};
+            }
+            interfaceList.forEach((_interface)=> {
+                mergeInterface(prj, _interface);
             });
+
+            //保存同步后项目
+            ProjectDef.saveDef(prj);
+
+            //构建返回数据
+            getInterfaces(cb);
         }
     });
 
@@ -134,7 +173,7 @@ function fetchProjectDefFromRemote(url, cb) {
                             prjId: prj._id,
                             active: false,
                             desc: prj.description,
-                            defURL:buildProjectInerfacesUrl(urlTool.parse(url),prj._id)
+                            defURL: buildProjectInerfacesUrl(urlTool.parse(url), prj._id)
                         };
                     } else {//merge
                         prjData.prjName = prj.name;

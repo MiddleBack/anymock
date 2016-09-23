@@ -30,7 +30,8 @@ function buildRunningResp(opts) {
     return {
         running:true,
         consoleUrl : `http://127.0.0.1:${opts.webPort}`,
-        proxyUrl:`http://${ip.address()}:${opts.port}`
+        proxyUrl:`http://${ip.address()}:${opts.port}`,
+        proxyPort:opts.port
     }
 }
 
