@@ -12,6 +12,7 @@ import Message from 'antd/lib/message';
 import Select from 'antd/lib/select';
 import Tooltip from 'antd/lib/tooltip';
 import Modal from 'antd/lib/modal';
+import Popover from 'antd/lib/popover';
 import CloneDeep from 'lodash/cloneDeep';
 import Fetch from '../../../commons/fetch';
 import './less/IntrefaceList.less';
@@ -25,12 +26,14 @@ let buildDataStore = (resp)=> {
         _interface.dealType = _interface.rewriteURL && _interface.rewriteURL.active ? INTERFACE_DEAL_TYPE.DEAL_TYPE_URL
             : _interface.rewriteData && _interface.rewriteData.active ? INTERFACE_DEAL_TYPE.DEAL_TYPE_DATE
             : INTERFACE_DEAL_TYPE.DEAL_TYPE_VERSION;
+
         //当处理类型为version时,设置当前默认版本
         if (_interface.dealType === INTERFACE_DEAL_TYPE.DEAL_TYPE_VERSION) {
             Object.keys(_interface.versions).forEach((version)=> {
                 _interface.versions[version].active && (_interface.currentVersion = version);
             });
         }
+
         //id --> key
         _interface.key = _interface.id;
 
@@ -66,29 +69,59 @@ let buildVersionInfo = (record)=> {
 };
 let dealRowForApply = (row)=> {
     let newRow = CloneDeep(row);
-    if (newRow.dealType === INTERFACE_DEAL_TYPE.DEAL_TYPE_URL) {
-        newRow.rewriteURL.active = true;
-    } else if (newRow.dealType === INTERFACE_DEAL_TYPE.DEAL_TYPE_DATE) {
-        newRow.rewriteData.active = true;
-    } else {
+    newRow.rewriteURL && (newRow.rewriteURL.active = newRow.dealType === INTERFACE_DEAL_TYPE.DEAL_TYPE_URL);
+    newRow.rewriteData && (newRow.rewriteData.active = newRow.dealType === INTERFACE_DEAL_TYPE.DEAL_TYPE_DATE);
+    if ((!newRow.rewriteURL || newRow.rewriteURL.active)
+        && (!newRow.rewriteData || newRow.rewriteData.active)) {
         let {currentVersion} = buildVersionInfo(newRow);
         Object.keys(newRow.versions).forEach((versionCode)=> {
-            newRow.versions[versionCode].active = versionCode === currentVersion;
+            let _versionDef = newRow.versions[versionCode];
+            if (versionCode == currentVersion) {
+                _versionDef.active = true;
+                if (typeof _versionDef.inputs == 'string') {
+                    _versionDef.inputs = JSON.parse(_versionDef.inputs);
+                }
+            } else {
+                _versionDef.active = false;
+            }
         })
     }
     newRow.id = newRow.key;
 
     delete newRow.key;
     delete newRow.currentVersion;
+    delete newRow.outputs;
     delete newRow.dealType;
+
+    // console.log('post row:',newRow);
 
     return newRow;
 };
 let generateUrlHasParam = function (url) {
-    while(/\/\:[^\/]*/.test(url)){
-        url = url.replace(/\/\:[^\/]*/,('/'+Math.random()*10).replace(/\./,''))
+    while (/\/\:[^\/]*/.test(url)) {
+        url = url.replace(/\/\:[^\/]*/, ('/' + Math.random() * 10).replace(/\./, ''))
     }
     return url;
+};
+let buildPopupEditor = function (key, title, value, onchange) {
+    return (
+        <Popover title={title}
+                 overlayStyle={{width: '550px'}}
+                 placement="left"
+                 content={
+                     <Input type="textarea"
+                            key={key}
+                            rows={4}
+                            style={{height: '430px'}}
+                            className="input"
+                            onChange={onchange}
+                            defaultValue={value}/>
+                 }
+                 trigger="click">
+            <a href="javascript:;" style={{lineHeight: '28px', display: 'block'}}>{title}</a>
+        </Popover>
+    )
+
 };
 export default class InterfaceList extends React.Component {
 
@@ -208,13 +241,13 @@ export default class InterfaceList extends React.Component {
                 response.json().then(json => ({json, response}))
             ).then(({json, response})=> {
                 Modal.success({
-                    title:`${record.type||'GET'} - ${fetchUrl}`,
-                    width:600,
-                    content:(
+                    title: `${record.type || 'GET'} - ${fetchUrl}`,
+                    width: 600,
+                    content: (
                         <Input type="textarea"
-                               style={{minHeight:400}}
+                               style={{minHeight: 400}}
                                readOnly={true}
-                               defaultValue={JSON.stringify(json,null,'\t')}/>
+                               defaultValue={JSON.stringify(json, null, '\t')}/>
                     )
                 });
             }).catch((err)=> {
@@ -295,20 +328,18 @@ export default class InterfaceList extends React.Component {
                         let _version = record.versions[currentVersion];
                         return (
                             <div>
-                                输入参数规则:
-                                <Input type="textarea"
-                                       key={'inputs_' + index + '_' + currentVersion}
-                                       rows={4}
-                                       className="input"
-                                       onChange={(e)=>record.versions[currentVersion].inputs = e.target.value}
-                                       defaultValue={_version.inputs}/>
-                                输出参数规则:
-                                <Input type="textarea"
-                                       key={'outputs_' + index + '_' + currentVersion}
-                                       rows={4}
-                                       className="input"
-                                       onChange={(e)=>record.versions[currentVersion].resMockRule = e.target.value}
-                                       defaultValue={_version.resMockRule}/>
+                                {
+                                    buildPopupEditor('inputs_' + index + '_' + currentVersion,
+                                        '输入参数规则',
+                                        _version.inputs,
+                                        (e)=>record.versions[currentVersion].inputs = e.target.value)
+                                }
+                                {
+                                    buildPopupEditor('outputs_' + index + '_' + currentVersion,
+                                        '输出参数规则',
+                                        _version.resMockRule,
+                                        (e)=>record.versions[currentVersion].resMockRule = e.target.value)
+                                }
                             </div>
                         );
                     case INTERFACE_DEAL_TYPE.DEAL_TYPE_URL :
@@ -324,17 +355,11 @@ export default class InterfaceList extends React.Component {
                         );
                     case INTERFACE_DEAL_TYPE.DEAL_TYPE_DATE :
                         record.rewriteData = record.rewriteData || {};
-                        return (
-                            <div>
-                                响应数据:
-                                <Input type="textarea"
-                                       key={'rewriteData_' + index}
-                                       rows={4}
-                                       onChange={(e)=>record.rewriteData.data = e.target.value}
-                                       className="input"
-                                       defaultValue={record.rewriteData.data}/>
-                            </div>
-                        );
+                        return buildPopupEditor(
+                            'rewriteData_' + index,
+                            '响应数据',
+                            record.rewriteData.data,
+                            (e)=>record.rewriteData.data = e.target.value);
                     default:
                         return null;
                 }

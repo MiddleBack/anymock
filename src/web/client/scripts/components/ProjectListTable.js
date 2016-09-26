@@ -10,6 +10,8 @@ import Form from 'antd/lib/form';
 import Switch from 'antd/lib/switch';
 import Select from 'antd/lib/select';
 import Popconfirm from 'antd/lib/popconfirm';
+import Tooltip from 'antd/lib/tooltip';
+import Icon from 'antd/lib/icon';
 import QueueAnim from 'rc-queue-anim';
 
 class ProjectListTable extends React.Component {
@@ -96,7 +98,19 @@ class ProjectListTable extends React.Component {
                                    }]
                                })}/>
                     </Form.Item>)
-                    : <span>{String(text)}</span>
+                    :
+                    <div>
+                        <span>{String(text)}</span>&nbsp;
+                        {
+                            !!record.desc && (
+                                <Tooltip placement="bottom"
+                                         title={record.desc}>
+                                    <Icon type="info-circle-o" style={{cursor: 'pointer'}}/>
+                                </Tooltip>
+                            )
+                        }
+
+                    </div>
             }
         }, {
             title: '项目接口远程路径',
@@ -111,7 +125,7 @@ class ProjectListTable extends React.Component {
                                style={{minWidth: 200}}
                                addonBefore={
                                    <Select defaultValue="http://"
-                                           key={'e_defURL_preFix_'+record.prjId}
+                                           key={'e_defURL_preFix_' + record.prjId}
                                            style={{width: 80}}
                                            {...getFieldProps('defURL_preFix', {initialValue: 'http://'})}>
                                        <Select.Option value="http://">http://</Select.Option>

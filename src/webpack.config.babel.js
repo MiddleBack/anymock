@@ -21,7 +21,7 @@ module.exports = {
     cache: true, //开启缓存,增量编译
     debug: true, //开启 debug 模式
     watch: true,
-    devtool: 'cheap-source-map', //生成 source map文件
+    devtool: 'source-map', //生成 source map文件,'cheap-source-map':调试时的源码是编译后的es5,但是编译速度快
     port: port,
     stats: {
         colors: true, //打印日志显示颜色

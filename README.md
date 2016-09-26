@@ -25,6 +25,13 @@
 关于HTTP代理：[https://imququ.com/post/web-proxy.html](https://imququ.com/post/web-proxy.html)
 手机http代理设置：[baidu](https://www.baidu.com/s?wd=%E6%89%8B%E6%9C%BAhttp%E4%BB%A3%E7%90%86%E8%AE%BE%E7%BD%AE) [google_hk](https://www.google.com.hk/search?q=%E6%89%8B%E6%9C%BAhttp%E4%BB%A3%E7%90%86%E8%AE%BE%E7%BD%AE&oq=%E6%89%8B%E6%9C%BAhttp%E4%BB%A3%E7%90%86%E8%AE%BE%E7%BD%AE)
 
+## TODO:
+* 把对资源（html/css/js）的拦截独立出来，方便页面文件的本地替换（调试线上页面很重要）
+* 完善README和user-guide
+* 引入redux，immutable
+* 加入按需加载
+* 开发模式加入dll
+
 ## 依赖项目
 * [anyproxy](https://github.com/alibaba/anyproxy)：本地代理工具
 * [RAP](https://github.com/thx/RAP)：接口管理平台
