@@ -1,5 +1,5 @@
 # anymock
-[![npm](https://img.shields.io/badge/npm-1.0.14-green.svg)](https://www.npmjs.com/package/any-mock)
+[![npm](https://img.shields.io/badge/npm-1.0.15-green.svg)](https://www.npmjs.com/package/any-mock)
 
 她是一个本地的代理工具。<br>
 她也是接口管理平台的客户端,可以根据接口管理平台服务端的接口定义选择性的代理本机请求。<br>
